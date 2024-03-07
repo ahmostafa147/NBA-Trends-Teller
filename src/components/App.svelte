@@ -364,18 +364,7 @@
     playing = false;
   }
 
-
-
-
-
-
-
-
-
-
-
-
-
+// -------------------- WARNING: cooked shit below
 
   function renderBarChart2(year) {
     teams = data.filter((d) => d.Year == year);
@@ -512,6 +501,39 @@
         "Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif",
       )
       .style("font-size", "20px");
+      
+      const lineData1 = [
+          { x: 305, y: 410 },
+          { x: 400, y: 310 }
+      ];
+      const lineFunction = d3.line()
+          .x(d => d.x)
+          .y(d => d.y);
+
+      svg1.append("path")
+          .attr("d", lineFunction(lineData1))
+          .attr("stroke", "gray")
+          .attr("stroke-width", 2)
+          .attr("fill", "none"); 
+          
+      const lineData2 = [
+          { x: 400, y: 310 },
+          { x: 750, y: 310 }
+      ];
+
+      svg1.append("path")
+          .attr("d", lineFunction(lineData2))
+          .attr("stroke", "gray")
+          .attr("stroke-width", 2)
+          .attr("fill", "none"); 
+      
+      svg1.append("text")
+        .attr("x", 400)  // x-coordinate of the text position
+        .attr("y", 300)  // y-coordinate of the text position
+        .attr("font-size", "14px")  // Set the font size
+        .attr("fill", "black")  // Set the text color
+        .text("ASS")
+        .style("font-size", "20px");
   }
 
 
