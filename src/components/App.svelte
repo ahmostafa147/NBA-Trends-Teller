@@ -859,6 +859,50 @@
         "Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif",
       )
       .style("font-size", "20px");
+    
+      const lineData1 = [
+          { x: 0, y: 200 },
+          { x: 1220, y: 200 }
+      ];
+      const lineFunction = d3.line()
+          .x(d => d.x)
+          .y(d => d.y);
+
+      svg3.append("path")
+          .attr("d", lineFunction(lineData1))
+          .attr("stroke", "red")
+          .attr("stroke-width", 2)
+          .attr("fill", "none"); 
+          
+          const lineData2 = [
+          { x: 805, y: 200 },
+          { x: 900, y: 100 }
+      ];
+
+      svg3.append("path")
+          .attr("d", lineFunction(lineData2))
+          .attr("stroke", "gray")
+          .attr("stroke-width", 2)
+          .attr("fill", "none"); 
+          
+      const lineData3 = [
+          { x: 900, y: 100 },
+          { x: 1250, y: 100 }
+      ];
+
+      svg3.append("path")
+          .attr("d", lineFunction(lineData3))
+          .attr("stroke", "gray")
+          .attr("stroke-width", 2)
+          .attr("fill", "none"); 
+      
+      svg3.append("text")
+        .attr("x", 900)
+        .attr("y", 90)
+        .attr("font-size", "14px")
+        .attr("fill", "black")
+        .text("ASS. STRAIGHT ASS.")
+        .style("font-size", "20px");
   }
 
   function renderBarChart5(year) {
@@ -999,8 +1043,8 @@
       .style("font-size", "20px");
       
       const lineData1 = [
-          { x: 305, y: 410 },
-          { x: 400, y: 310 }
+          { x: 0, y: 200 },
+          { x: 1220, y: 200 }
       ];
       const lineFunction = d3.line()
           .x(d => d.x)
@@ -1008,13 +1052,13 @@
 
       svg5.append("path")
           .attr("d", lineFunction(lineData1))
-          .attr("stroke", "gray")
+          .attr("stroke", "red")
           .attr("stroke-width", 2)
           .attr("fill", "none"); 
           
-      const lineData2 = [
-          { x: 400, y: 310 },
-          { x: 750, y: 310 }
+          const lineData2 = [
+          { x: 805, y: 200 },
+          { x: 900, y: 100 }
       ];
 
       svg5.append("path")
@@ -1022,15 +1066,25 @@
           .attr("stroke", "gray")
           .attr("stroke-width", 2)
           .attr("fill", "none"); 
+          
+      const lineData3 = [
+          { x: 900, y: 100 },
+          { x: 1250, y: 100 }
+      ];
+
+      svg5.append("path")
+          .attr("d", lineFunction(lineData3))
+          .attr("stroke", "gray")
+          .attr("stroke-width", 2)
+          .attr("fill", "none"); 
       
       svg5.append("text")
-        .attr("x", 400)
-        .attr("y", 300)
+        .attr("x", 900)
+        .attr("y", 90)
         .attr("font-size", "14px")
         .attr("fill", "black")
-        .text("ASS")
+        .text("ASS. STRAIGHT ASS.")
         .style("font-size", "20px");
-      
   }
 
 
