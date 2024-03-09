@@ -230,7 +230,7 @@
       .attr("x", 0 - height / 2)
       .attr("dy", "1em")
       .style("text-anchor", "middle")
-      .text("Average Points Per Game Difference")
+      .text("Average Points Per Game")
       .style(
         "font-family",
         "Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif",
@@ -382,7 +382,7 @@
           logo:
             logo ||
             "https://cdn.freebiesupply.com/images/large/2x/nba-logo-transparent.png",
-        }; // Provide a default logo URL if not found
+        };
       });
 
     const margin = { top: 40, right: 120, bottom: 150, left: 60 };
@@ -499,7 +499,7 @@
       .attr("x", 0 - height / 2)
       .attr("dy", "1em")
       .style("text-anchor", "middle")
-      .text("Average Points Per Game Difference")
+      .text("Average Points Per Game")
       .style(
         "font-family",
         "Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif",
@@ -531,13 +531,63 @@
           .attr("stroke-width", 2)
           .attr("fill", "none"); 
       
-      svg1.append("text")
-        .attr("x", 400)
-        .attr("y", 300)
-        .attr("font-size", "14px")
-        .attr("fill", "black")
-        .text("ASS. STRAIGHT ASS.")
-        .style("font-size", "20px");
+      // svg1.append("text")
+      //   .attr("x", 400)
+      //   .attr("y", 300)
+      //   .attr("font-size", "14px")
+      //   .attr("fill", "black")
+      //   .text("The lowest scoring team since 1950 is the 1953 Atlanta Hawks, \
+      //   averaging a paltry 70 points per game. This lowpoint is the benchmark \
+      //   from which we compare all other team averages over the next decades.")
+      //   .style("text-align", "justify")
+      //   .style("font-size", "12px");
+      const foreignObject = svg1.append("foreignObject")
+          .attr("x", 400)
+          .attr("y", 245)
+          .attr("width", 350)
+          .attr("height", 100);
+
+      const div = foreignObject.append("xhtml:div")
+          .style("font-size", "14px")
+          .style("color", "black")
+          .style("text-align", "justify");
+
+      div.html("The lowest scoring team since 1950 is the 1953 Atlanta Hawks, \
+          averaging a paltry 70 points per game. This low point is the benchmark \
+          from which we will compare all other team averages over the next decades.")
+          .style("font-size", "14px");
+
+      const foreignObject2 = svg1.append("foreignObject")
+          .attr("x", 770)
+          .attr("y", 0)
+          .attr("width", 350)
+          .attr("height", 500);
+
+      const div2 = foreignObject2.append("xhtml:div")
+          .style("font-size", "14px")
+          .style("color", "black")
+          .style("text-align", "justify");
+
+        div2.append("img")
+          .attr("src", "https://cdn.nba.com/manage/2021/09/GettyImages-1835399-scaled-e1631505695651-1568x885.jpg")
+          // .attr("width", 500); // Adjust the width as needed
+          .attr("height", 200);
+
+      const foreignObject3 = svg1.append("foreignObject")
+          .attr("x", 400)
+          .attr("y", 75)
+          .attr("width", 350)
+          .attr("height", 100);
+
+      const div3 = foreignObject3.append("xhtml:div")
+          .style("font-size", "14px")
+          .style("color", "black")
+          .style("text-align", "justify");
+
+      div3.html("In the 1953 NBA season, the Minneapolis Lakers led by George \
+            Mikan (pictured to the right) would win their last championship before \
+            moving to Los Angeles.")
+          .style("font-size", "14px");
       
   }
 
@@ -671,7 +721,7 @@
       .attr("x", 0 - height / 2)
       .attr("dy", "1em")
       .style("text-anchor", "middle")
-      .text("Average Points Per Game Difference")
+      .text("Average Points Per Game")
       .style(
         "font-family",
         "Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif",
@@ -679,8 +729,8 @@
       .style("font-size", "20px");
 
       const lineData1 = [
-          { x: 0, y: 200 },
-          { x: 1220, y: 200 }
+          { x: 0, y: 150 },
+          { x: 1220, y: 150 }
       ];
       const lineFunction = d3.line()
           .x(d => d.x)
@@ -693,8 +743,8 @@
           .attr("fill", "none"); 
           
           const lineData2 = [
-          { x: 805, y: 200 },
-          { x: 900, y: 100 }
+          { x: 805, y: 150 },
+          { x: 890, y: 85 }
       ];
 
       svg2.append("path")
@@ -704,8 +754,8 @@
           .attr("fill", "none"); 
           
       const lineData3 = [
-          { x: 900, y: 100 },
-          { x: 1250, y: 100 }
+          { x: 890, y: 85 },
+          { x: 1250, y: 85 }
       ];
 
       svg2.append("path")
@@ -715,8 +765,8 @@
           .attr("fill", "none"); 
       
       svg2.append("text")
-        .attr("x", 900)
-        .attr("y", 90)
+        .attr("x", 890)
+        .attr("y", 80)
         .attr("font-size", "14px")
         .attr("fill", "black")
         .text("ASS. STRAIGHT ASS.")
@@ -853,7 +903,7 @@
       .attr("x", 0 - height / 2)
       .attr("dy", "1em")
       .style("text-anchor", "middle")
-      .text("Average Points Per Game Difference")
+      .text("Average Points Per Game")
       .style(
         "font-family",
         "Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif",
@@ -1035,7 +1085,7 @@
       .attr("x", 0 - height / 2)
       .attr("dy", "1em")
       .style("text-anchor", "middle")
-      .text("Average Points Per Game Difference")
+      .text("Average Points Per Game")
       .style(
         "font-family",
         "Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif",
