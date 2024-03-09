@@ -100,7 +100,7 @@
       renderBarChart(year);
       renderBarChart2(1953);
       renderBarChart3(1980);
-      renderBarChart4(2000);
+      renderBarChart4(1998);
       renderBarChart5(2022);
       renderLinePlot();
     });
@@ -787,21 +787,27 @@
       { x: 1250, y: 85 },
     ];
 
-    svg2
-      .append("path")
-      .attr("d", lineFunction(lineData3))
-      .attr("stroke", "gray")
-      .attr("stroke-width", 2)
-      .attr("fill", "none");
+      svg2.append("path")
+          .attr("d", lineFunction(lineData3))
+          .attr("stroke", "gray")
+          .attr("stroke-width", 2)
+          .attr("fill", "none"); 
 
-    svg2
-      .append("text")
-      .attr("x", 890)
-      .attr("y", 80)
-      .attr("font-size", "14px")
-      .attr("fill", "black")
-      .text("ASS. STRAIGHT ASS.")
-      .style("font-size", "20px");
+      const foreignObject = svg2.append("foreignObject")
+          .attr("x", 890)
+          .attr("y", 20)
+          .attr("width", 350)
+          .attr("height", 100);
+
+      const div = foreignObject.append("xhtml:div")
+          .style("font-size", "14px")
+          .style("color", "black")
+          .style("text-align", "justify");
+
+      div.html("The league scoring average in the 1980 NBA season was 108.1. \
+            This was a typical season in the 70s and 80s, an era dominated by \
+            stars like Kareem Abdul-Jabbar, Magic Johnson, and Larry Bird.")
+          .style("font-size", "14px");
   }
 
   function renderBarChart4(year) {
@@ -940,15 +946,14 @@
         "Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif",
       )
       .style("font-size", "20px");
-
-    const lineData1 = [
-      { x: 0, y: 200 },
-      { x: 1220, y: 200 },
-    ];
-    const lineFunction = d3
-      .line()
-      .x((d) => d.x)
-      .y((d) => d.y);
+    
+      const lineData1 = [
+          { x: 0, y: 263 },
+          { x: 1220, y: 263 }
+      ];
+      const lineFunction = d3.line()
+          .x(d => d.x)
+          .y(d => d.y);
 
     svg3
       .append("path")
@@ -1316,11 +1321,8 @@
       Lowest Average
     </h2>
   </div>
-  <div id="chart4" class="chart_class">
-    <h2 style="text-align: left;">
-      NBA Teams Difference in Average Points per Game in 2000 From All Time
-      Lowest Average
-    </h2>
+  <div id = "chart4" class="chart_class">
+    <h2 style="text-align: left;">NBA Teams Difference in Average Points per Game in 1998 From All Time Lowest Average</h2>
   </div>
   <div id="chart5" class="chart_class">
     <h2 style="text-align: left;">
