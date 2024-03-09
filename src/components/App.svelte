@@ -1,8 +1,7 @@
 <script>
   import { onMount } from "svelte";
   import * as d3 from "d3";
-
-
+  import cloneDeep from "lodash/cloneDeep";
   let data = [];
   let keys = [];
   let teams = [];
@@ -25,8 +24,13 @@
   let logos;
   let mouseX;
   let mouseY;
-
+  let team_line = [];
+  let year_avg = [];
+  var counter = 0;
+  let team_pts = [];
   let tooltip;
+  let year_data;
+  let line;
 
   const teamLogos = {
     "Atlanta Hawks": "modeling_plot/src/components/logos/atlanta hawks.svg",
@@ -97,7 +101,8 @@
       renderBarChart2(1953);
       renderBarChart3(1980);
       renderBarChart4(2000);
-      renderBarChart5(2022)
+      renderBarChart5(2022);
+      renderLinePlot();
     });
   });
 
@@ -256,7 +261,10 @@
     // console.log(event.toElement);
     let [mouseX, mouseY] = d3.pointer(event);
     console.log(mouseX, mouseY);
-    tooltip.attr('transform', `translate(${mouseX + 10}, ${mouseY - tooltipHeight + 5})`);
+    tooltip.attr(
+      "transform",
+      `translate(${mouseX + 10}, ${mouseY - tooltipHeight + 5})`,
+    );
     // tooltip.select('.text').text(`${event.srcElement.__data__.team}: ${event.srcElement.__data__.score} dsfjhsdk`);
     // console.log(tooltip.select('.text'))
     // console.log(event.srcElement.__data__);
@@ -367,7 +375,7 @@
     playing = false;
   }
 
-// -------------------- WARNING: cooked shit below
+  // -------------------- WARNING: cooked shit below
 
   function renderBarChart2(year) {
     teams = data.filter((d) => d.Year == year);
@@ -473,7 +481,7 @@
           .attr("text-anchor", "middle")
           .style("font-size", "12px")
           .text(`PPG: ${d.score}`);
-          updateTooltipPosition(event, d, svg1);
+        updateTooltipPosition(event, d, svg1);
       })
       .on("mousemove", (event, d) => {
         updateTooltipPosition(event, d, svg1);
@@ -505,90 +513,108 @@
         "Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif",
       )
       .style("font-size", "20px");
-      
-      const lineData1 = [
-          { x: 305, y: 410 },
-          { x: 400, y: 310 }
-      ];
-      const lineFunction = d3.line()
-          .x(d => d.x)
-          .y(d => d.y);
 
-      svg1.append("path")
-          .attr("d", lineFunction(lineData1))
-          .attr("stroke", "gray")
-          .attr("stroke-width", 2)
-          .attr("fill", "none"); 
-          
-      const lineData2 = [
-          { x: 400, y: 310 },
-          { x: 750, y: 310 }
-      ];
+    const lineData1 = [
+      { x: 305, y: 410 },
+      { x: 400, y: 310 },
+    ];
+    const lineFunction = d3
+      .line()
+      .x((d) => d.x)
+      .y((d) => d.y);
 
-      svg1.append("path")
-          .attr("d", lineFunction(lineData2))
-          .attr("stroke", "gray")
-          .attr("stroke-width", 2)
-          .attr("fill", "none"); 
-      
-      // svg1.append("text")
-      //   .attr("x", 400)
-      //   .attr("y", 300)
-      //   .attr("font-size", "14px")
-      //   .attr("fill", "black")
-      //   .text("The lowest scoring team since 1950 is the 1953 Atlanta Hawks, \
-      //   averaging a paltry 70 points per game. This lowpoint is the benchmark \
-      //   from which we compare all other team averages over the next decades.")
-      //   .style("text-align", "justify")
-      //   .style("font-size", "12px");
-      const foreignObject = svg1.append("foreignObject")
-          .attr("x", 400)
-          .attr("y", 245)
-          .attr("width", 350)
-          .attr("height", 100);
+    svg1
+      .append("path")
+      .attr("d", lineFunction(lineData1))
+      .attr("stroke", "gray")
+      .attr("stroke-width", 2)
+      .attr("fill", "none");
 
-      const div = foreignObject.append("xhtml:div")
-          .style("font-size", "14px")
-          .style("color", "black")
-          .style("text-align", "justify");
+    const lineData2 = [
+      { x: 400, y: 310 },
+      { x: 750, y: 310 },
+    ];
 
-      div.html("The lowest scoring team since 1950 is the 1953 Atlanta Hawks, \
+    svg1
+      .append("path")
+      .attr("d", lineFunction(lineData2))
+      .attr("stroke", "gray")
+      .attr("stroke-width", 2)
+      .attr("fill", "none");
+
+    // svg1.append("text")
+    //   .attr("x", 400)
+    //   .attr("y", 300)
+    //   .attr("font-size", "14px")
+    //   .attr("fill", "black")
+    //   .text("The lowest scoring team since 1950 is the 1953 Atlanta Hawks, \
+    //   averaging a paltry 70 points per game. This lowpoint is the benchmark \
+    //   from which we compare all other team averages over the next decades.")
+    //   .style("text-align", "justify")
+    //   .style("font-size", "12px");
+    const foreignObject = svg1
+      .append("foreignObject")
+      .attr("x", 400)
+      .attr("y", 245)
+      .attr("width", 350)
+      .attr("height", 100);
+
+    const div = foreignObject
+      .append("xhtml:div")
+      .style("font-size", "14px")
+      .style("color", "black")
+      .style("text-align", "justify");
+
+    div
+      .html(
+        "The lowest scoring team since 1950 is the 1953 Atlanta Hawks, \
           averaging a paltry 70 points per game. This low point is the benchmark \
-          from which we will compare all other team averages over the next decades.")
-          .style("font-size", "14px");
+          from which we will compare all other team averages over the next decades.",
+      )
+      .style("font-size", "14px");
 
-      const foreignObject2 = svg1.append("foreignObject")
-          .attr("x", 770)
-          .attr("y", 0)
-          .attr("width", 350)
-          .attr("height", 500);
+    const foreignObject2 = svg1
+      .append("foreignObject")
+      .attr("x", 770)
+      .attr("y", 0)
+      .attr("width", 350)
+      .attr("height", 500);
 
-      const div2 = foreignObject2.append("xhtml:div")
-          .style("font-size", "14px")
-          .style("color", "black")
-          .style("text-align", "justify");
+    const div2 = foreignObject2
+      .append("xhtml:div")
+      .style("font-size", "14px")
+      .style("color", "black")
+      .style("text-align", "justify");
 
-        div2.append("img")
-          .attr("src", "https://cdn.nba.com/manage/2021/09/GettyImages-1835399-scaled-e1631505695651-1568x885.jpg")
-          // .attr("width", 500); // Adjust the width as needed
-          .attr("height", 200);
+    div2
+      .append("img")
+      .attr(
+        "src",
+        "https://cdn.nba.com/manage/2021/09/GettyImages-1835399-scaled-e1631505695651-1568x885.jpg",
+      )
+      // .attr("width", 500); // Adjust the width as needed
+      .attr("height", 200);
 
-      const foreignObject3 = svg1.append("foreignObject")
-          .attr("x", 400)
-          .attr("y", 75)
-          .attr("width", 350)
-          .attr("height", 100);
+    const foreignObject3 = svg1
+      .append("foreignObject")
+      .attr("x", 400)
+      .attr("y", 75)
+      .attr("width", 350)
+      .attr("height", 100);
 
-      const div3 = foreignObject3.append("xhtml:div")
-          .style("font-size", "14px")
-          .style("color", "black")
-          .style("text-align", "justify");
+    const div3 = foreignObject3
+      .append("xhtml:div")
+      .style("font-size", "14px")
+      .style("color", "black")
+      .style("text-align", "justify");
 
-      div3.html("In the 1953 NBA season, the Minneapolis Lakers led by George \
+    div3
+      .html(
+        "In the 1953 NBA season, the Minneapolis Lakers led by George \
             Mikan (pictured to the right) would win their last championship before \
-            moving to Los Angeles.")
-          .style("font-size", "14px");
-      
+            moving to Los Angeles.",
+      )
+      .style("font-size", "14px");
   }
 
   function renderBarChart3(year) {
@@ -695,7 +721,7 @@
           .attr("text-anchor", "middle")
           .style("font-size", "12px")
           .text(`PPG: ${d.score}`);
-          updateTooltipPosition(event, d, svg2);
+        updateTooltipPosition(event, d, svg2);
       })
       .on("mousemove", (event, d) => {
         updateTooltipPosition(event, d, svg2);
@@ -728,49 +754,54 @@
       )
       .style("font-size", "20px");
 
-      const lineData1 = [
-          { x: 0, y: 150 },
-          { x: 1220, y: 150 }
-      ];
-      const lineFunction = d3.line()
-          .x(d => d.x)
-          .y(d => d.y);
+    const lineData1 = [
+      { x: 0, y: 150 },
+      { x: 1220, y: 150 },
+    ];
+    const lineFunction = d3
+      .line()
+      .x((d) => d.x)
+      .y((d) => d.y);
 
-      svg2.append("path")
-          .attr("d", lineFunction(lineData1))
-          .attr("stroke", "red")
-          .attr("stroke-width", 2)
-          .attr("fill", "none"); 
-          
-          const lineData2 = [
-          { x: 805, y: 150 },
-          { x: 890, y: 85 }
-      ];
+    svg2
+      .append("path")
+      .attr("d", lineFunction(lineData1))
+      .attr("stroke", "red")
+      .attr("stroke-width", 2)
+      .attr("fill", "none");
 
-      svg2.append("path")
-          .attr("d", lineFunction(lineData2))
-          .attr("stroke", "gray")
-          .attr("stroke-width", 2)
-          .attr("fill", "none"); 
-          
-      const lineData3 = [
-          { x: 890, y: 85 },
-          { x: 1250, y: 85 }
-      ];
+    const lineData2 = [
+      { x: 805, y: 150 },
+      { x: 890, y: 85 },
+    ];
 
-      svg2.append("path")
-          .attr("d", lineFunction(lineData3))
-          .attr("stroke", "gray")
-          .attr("stroke-width", 2)
-          .attr("fill", "none"); 
-      
-      svg2.append("text")
-        .attr("x", 890)
-        .attr("y", 80)
-        .attr("font-size", "14px")
-        .attr("fill", "black")
-        .text("ASS. STRAIGHT ASS.")
-        .style("font-size", "20px");
+    svg2
+      .append("path")
+      .attr("d", lineFunction(lineData2))
+      .attr("stroke", "gray")
+      .attr("stroke-width", 2)
+      .attr("fill", "none");
+
+    const lineData3 = [
+      { x: 890, y: 85 },
+      { x: 1250, y: 85 },
+    ];
+
+    svg2
+      .append("path")
+      .attr("d", lineFunction(lineData3))
+      .attr("stroke", "gray")
+      .attr("stroke-width", 2)
+      .attr("fill", "none");
+
+    svg2
+      .append("text")
+      .attr("x", 890)
+      .attr("y", 80)
+      .attr("font-size", "14px")
+      .attr("fill", "black")
+      .text("ASS. STRAIGHT ASS.")
+      .style("font-size", "20px");
   }
 
   function renderBarChart4(year) {
@@ -877,7 +908,7 @@
           .attr("text-anchor", "middle")
           .style("font-size", "12px")
           .text(`PPG: ${d.score}`);
-          updateTooltipPosition(event, d, svg3);
+        updateTooltipPosition(event, d, svg3);
       })
       .on("mousemove", (event, d) => {
         updateTooltipPosition(event, d, svg3);
@@ -909,50 +940,55 @@
         "Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif",
       )
       .style("font-size", "20px");
-    
-      const lineData1 = [
-          { x: 0, y: 200 },
-          { x: 1220, y: 200 }
-      ];
-      const lineFunction = d3.line()
-          .x(d => d.x)
-          .y(d => d.y);
 
-      svg3.append("path")
-          .attr("d", lineFunction(lineData1))
-          .attr("stroke", "red")
-          .attr("stroke-width", 2)
-          .attr("fill", "none"); 
-          
-          const lineData2 = [
-          { x: 805, y: 200 },
-          { x: 900, y: 100 }
-      ];
+    const lineData1 = [
+      { x: 0, y: 200 },
+      { x: 1220, y: 200 },
+    ];
+    const lineFunction = d3
+      .line()
+      .x((d) => d.x)
+      .y((d) => d.y);
 
-      svg3.append("path")
-          .attr("d", lineFunction(lineData2))
-          .attr("stroke", "gray")
-          .attr("stroke-width", 2)
-          .attr("fill", "none"); 
-          
-      const lineData3 = [
-          { x: 900, y: 100 },
-          { x: 1250, y: 100 }
-      ];
+    svg3
+      .append("path")
+      .attr("d", lineFunction(lineData1))
+      .attr("stroke", "red")
+      .attr("stroke-width", 2)
+      .attr("fill", "none");
 
-      svg3.append("path")
-          .attr("d", lineFunction(lineData3))
-          .attr("stroke", "gray")
-          .attr("stroke-width", 2)
-          .attr("fill", "none"); 
-      
-      svg3.append("text")
-        .attr("x", 900)
-        .attr("y", 90)
-        .attr("font-size", "14px")
-        .attr("fill", "black")
-        .text("ASS. STRAIGHT ASS.")
-        .style("font-size", "20px");
+    const lineData2 = [
+      { x: 805, y: 200 },
+      { x: 900, y: 100 },
+    ];
+
+    svg3
+      .append("path")
+      .attr("d", lineFunction(lineData2))
+      .attr("stroke", "gray")
+      .attr("stroke-width", 2)
+      .attr("fill", "none");
+
+    const lineData3 = [
+      { x: 900, y: 100 },
+      { x: 1250, y: 100 },
+    ];
+
+    svg3
+      .append("path")
+      .attr("d", lineFunction(lineData3))
+      .attr("stroke", "gray")
+      .attr("stroke-width", 2)
+      .attr("fill", "none");
+
+    svg3
+      .append("text")
+      .attr("x", 900)
+      .attr("y", 90)
+      .attr("font-size", "14px")
+      .attr("fill", "black")
+      .text("ASS. STRAIGHT ASS.")
+      .style("font-size", "20px");
   }
 
   function renderBarChart5(year) {
@@ -1059,7 +1095,7 @@
           .attr("text-anchor", "middle")
           .style("font-size", "12px")
           .text(`PPG: ${d.score}`);
-          updateTooltipPosition(event, d, svg5);
+        updateTooltipPosition(event, d, svg5);
       })
       .on("mousemove", (event, d) => {
         updateTooltipPosition(event, d, svg5);
@@ -1091,53 +1127,150 @@
         "Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif",
       )
       .style("font-size", "20px");
-      
-      const lineData1 = [
-          { x: 0, y: 200 },
-          { x: 1220, y: 200 }
-      ];
-      const lineFunction = d3.line()
-          .x(d => d.x)
-          .y(d => d.y);
 
-      svg5.append("path")
-          .attr("d", lineFunction(lineData1))
-          .attr("stroke", "red")
-          .attr("stroke-width", 2)
-          .attr("fill", "none"); 
-          
-          const lineData2 = [
-          { x: 805, y: 200 },
-          { x: 900, y: 100 }
-      ];
+    const lineData1 = [
+      { x: 0, y: 200 },
+      { x: 1220, y: 200 },
+    ];
+    const lineFunction = d3
+      .line()
+      .x((d) => d.x)
+      .y((d) => d.y);
 
-      svg5.append("path")
-          .attr("d", lineFunction(lineData2))
-          .attr("stroke", "gray")
-          .attr("stroke-width", 2)
-          .attr("fill", "none"); 
-          
-      const lineData3 = [
-          { x: 900, y: 100 },
-          { x: 1250, y: 100 }
-      ];
+    svg5
+      .append("path")
+      .attr("d", lineFunction(lineData1))
+      .attr("stroke", "red")
+      .attr("stroke-width", 2)
+      .attr("fill", "none");
 
-      svg5.append("path")
-          .attr("d", lineFunction(lineData3))
-          .attr("stroke", "gray")
-          .attr("stroke-width", 2)
-          .attr("fill", "none"); 
-      
-      svg5.append("text")
-        .attr("x", 900)
-        .attr("y", 90)
-        .attr("font-size", "14px")
-        .attr("fill", "black")
-        .text("ASS. STRAIGHT ASS.")
-        .style("font-size", "20px");
+    const lineData2 = [
+      { x: 805, y: 200 },
+      { x: 900, y: 100 },
+    ];
+
+    svg5
+      .append("path")
+      .attr("d", lineFunction(lineData2))
+      .attr("stroke", "gray")
+      .attr("stroke-width", 2)
+      .attr("fill", "none");
+
+    const lineData3 = [
+      { x: 900, y: 100 },
+      { x: 1250, y: 100 },
+    ];
+
+    svg5
+      .append("path")
+      .attr("d", lineFunction(lineData3))
+      .attr("stroke", "gray")
+      .attr("stroke-width", 2)
+      .attr("fill", "none");
+
+    svg5
+      .append("text")
+      .attr("x", 900)
+      .attr("y", 90)
+      .attr("font-size", "14px")
+      .attr("fill", "black")
+      .text("ASS. STRAIGHT ASS.")
+      .style("font-size", "20px");
+  }
+  function takeAverage(y, d) {
+    var vals = Object.values(d).map((pts) => parseFloat(pts));
+    let sum = vals.reduce(
+      (accumulator, currentValue) => accumulator + currentValue,
+      0,
+    );
+    let average = sum / vals.length;
+    return { year: parseInt(y), avg: parseFloat(average.toFixed(1)) };
   }
 
+  function teamData(y, d, teams) {
+    return { year: y, pts: d, team: teams };
+  }
+  function renderLinePlot() {
+    team_line = ["Boston Celtics", "New York Knicks"];
+    year_avg = [];
+    counter = 0;
+    team_pts = [];
+    year_data = cloneDeep(data);
+    for (let yr_data in year_data) {
+      if (counter <= 76) {
+        var yr = year_data[counter].Year;
+        delete year_data[counter].Year;
+        year_avg[counter] = takeAverage(yr, year_data[counter]);
+        team_pts[counter] = year_data[counter].Year;
+        counter++;
+      }
+    }
+    year_data = cloneDeep(data);
+    counter = 0;
+    for (let yer of year_data) {
+      for (let tm of teams) {
+        var yr = yer.Year;
+        team_pts[counter] = teamData(yr, yer[tm], tm);
+        counter++;
+      }
+    }
 
+    const margin = { top: 40, right: 120, bottom: 150, left: 60 };
+    const width = 1400 - margin.left - margin.right;
+    height = 600 - margin.top - margin.bottom;
+    let minimumX = Math.min(...year_avg.map((obj) => parseInt(obj["year"])));
+    let maximumX = Math.max(...year_avg.map((obj) => parseInt(obj["year"])));
+    let minimumY = 0;
+    let maximumY = Math.max(...year_avg.map((obj) => obj["avg"])) + 20;
+
+    const x = d3.scaleLinear().domain([minimumX, maximumX]).range([0, height]);
+
+    const y = d3.scaleLinear().domain([minimumY, maximumY]).range([height, 0]);
+
+    var lineFunction = d3
+      .line()
+      .x((d) => d.year)
+      .y((d) => d.avg)
+      .curve(d3.curveBasis);
+
+    line = d3
+      .select("#linechart")
+      .append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+      .attr("transform", `translate(${margin.left},${margin.top})`);
+
+    line
+      .append("g")
+      .attr("transform", `translate(0,${height})`)
+      .call(d3.axisBottom(x));
+
+    line.append("g").call(d3.axisLeft(y));
+
+    var u = line.selectAll(".lineTest").data([year_avg]);
+
+    u.enter()
+      .append("path")
+      .attr("class", "lineTest")
+      .merge(u)
+      .transition()
+      .duration(3000)
+      .attr(
+        "d",
+        d3
+          .line()
+          .x(function (d) {
+            return x(d.year);
+          })
+          .y(function (d) {
+            return y(d.avg);
+          }),
+      )
+      .attr("fill", "none")
+      .attr("stroke", "steelblue")
+      .attr("stroke-width", 2.5);
+  }
 </script>
 
 <main>
@@ -1149,7 +1282,10 @@
         alt="NBA"
       />
     </h1>
-    <h2 style="text-align: left;">NBA Teams Difference in Average Points per Game in {year} From All Time Lowest Average</h2>
+    <h2 style="text-align: left;">
+      NBA Teams Difference in Average Points per Game in {year} From All Time Lowest
+      Average
+    </h2>
     <div id="overlay">
       <!-- svelte-ignore a11y-label-has-associated-control -->
       <label>{year}</label>
@@ -1168,129 +1304,161 @@
     </div>
   </div>
 
-  <div id = "chart2" class="chart_class">
-    <h2 style="text-align: left;">NBA Teams Difference in Average Points per Game in 1953 From All Time Lowest Average</h2>
+  <div id="chart2" class="chart_class">
+    <h2 style="text-align: left;">
+      NBA Teams Difference in Average Points per Game in 1953 From All Time
+      Lowest Average
+    </h2>
   </div>
-  <div id = "chart3" class="chart_class">
-    <h2 style="text-align: left;">NBA Teams Difference in Average Points per Game in 1980 From All Time Lowest Average</h2>
+  <div id="chart3" class="chart_class">
+    <h2 style="text-align: left;">
+      NBA Teams Difference in Average Points per Game in 1980 From All Time
+      Lowest Average
+    </h2>
   </div>
-  <div id = "chart4" class="chart_class">
-    <h2 style="text-align: left;">NBA Teams Difference in Average Points per Game in 2000 From All Time Lowest Average</h2>
+  <div id="chart4" class="chart_class">
+    <h2 style="text-align: left;">
+      NBA Teams Difference in Average Points per Game in 2000 From All Time
+      Lowest Average
+    </h2>
   </div>
-  <div id = "chart5" class="chart_class">
-    <h2 style="text-align: left;">NBA Teams Difference in Average Points per Game in 2022 From All Time Lowest Average</h2>
+  <div id="chart5" class="chart_class">
+    <h2 style="text-align: left;">
+      NBA Teams Difference in Average Points per Game in 2022 From All Time
+      Lowest Average
+    </h2>
   </div>
-  
+  <div id="linechart">
+
+  </div>
+
   <div id="text">
     <h3 style="text-align: left;">Design Process and Decisions</h3>
-    <p style="font-size: 24;">A common narrative and topic of debate amongst NBA (National Basketball 
-      Association) fans and media is whether teams are scoring too many 
-      points and defense is becoming a smaller part of the game. We decided 
-      to explore this narrative by plotting the average points scored per 
-      game per team over the history of the league, starting from 1950 when 
-      the league only comprised of 8 teams.</p>
-  <p>For our data, we decided to get it from Basketball Reference, a widely 
-      trusted, although not official, source for basketball data amongst NBA 
-      fans and media. We chose to scrape data from Basketball Reference as 
-      opposed to NBA.com, the league’s official source for data, because 
-      Basketball Reference was much easier to get data and the data was 
-      cleaner. Cleaning the data involved filling in zeros for the years 
-      when certain teams did not exist yet. Otherwise, the Basketball 
-      Reference data was clean and easy to work with.</p>
-  <p>Regarding design decisions, we knew we wanted to do a slider to show 
-      data for different years and be able to play it to show the progression 
-      of scoring over the years. As a result, we chose to use a bar chart as 
-      it was an efficient way to display data for all 30 teams (which are 
-      essentially 30 categories) for a single year. On top of each individual 
-      bar, we decided to add the team’s logo. This is a quick and easy way 
-      to identify a team’s bar, if one knows the team logos, without having 
-      to look all the way down to the x-axis on top of helping differentiate 
-      bars when many can have similar values. For each bar, we have a tooltip 
-      that shows the exact points per game (PPG) values for the team being 
-      hovered over. This is helpful as in a bar chart it can be hard to get 
-      an exact value, especially in the wider chart that we have. The tooltip 
-      updates to whatever team it hovers over and the value updates with the 
-      incrementing year as long as one’s mouse is moving. For the font of the 
-      graph and axes titles, we decided to use the impact font as it matches 
-      the font commonly used in NBA graphics on social media and titles of 
-      NBA articles. The color of the bars matches the color of a basketball 
-      to give a bit of additional semantic encoding.</p>
-  <p>Playing the slider and observing the changes over the years, we can see 
-    that teams were scoring very few points in the early years of the league,
-     likely as basketball was still being fleshed out as a serious sport. 
-     Over the next three decades until around the 1990s, teams would score a 
-     respectable amount of points, with many teams hovering around 110 points 
-     per game. Starting in the 90s, teams started scoring significantly less 
-     points and averages reached lows not seen since the inception of the 
-     league in the 2000s, when some teams were averaging less than 90 points 
-     per game. This trend of low scoring games stopped around the mid 2010s, 
-     with team scoring averages increasing at an unprecedented rate in the 
-     last few years. Our conclusion is that while there is reason for concern 
-     with the quick uptick in scoring in not even the last decade. However, 
-     this level of scoring has been seen before in the 70s and 80s. Therefore, 
-     this fear is most likely exaggerated by older NBA fans who grew up 
-     watching the lower scoring style of basketball of the 1990s and 2000s. </p>
-  <p>To begin our development process, we had to decide on a dataset. We all 
-    agreed that the datasets we had used for Project 2 were limiting, so we 
-    decided to find some new, bigger data. Nathan and Walter were confident 
-    in their domain knowledge of the NBA and basketball. Additionally, they 
-    knew that there is an abundance of data available from sources such as 
-    Basketball Reference and NBA.com. </p>
-  <p>Approaching the project from the perspective of making an interactive 
-    visualization, we decided from the start to do something that changes 
-    with time, incorporating a slider like we did in Lab 6 and one of the 
-    D3 examples in lecture. In using a slider, we decided to not do a line 
-    chart as it would not make much sense, because line charts typically 
-    show progression and trends over a period of time. Having a line for 
-    each NBA team would have been too messy. With the bar chart, we decided 
-    to limit the y-axis to a range from 0 to 60. The value represented by the 
-    bar charts represents the difference in points per game for that team 
-    that year from the all time lowest average (70.0 by the Atlanta Hawks 
-    in 1953). This allows us to see how much teams have improved at scoring 
-    since the worst team near the beginning of the league. This 
-    transformation of the data is key as it makes small differences more 
-    evident. A seemingly small difference of 5 PPG is extremely significant 
-    in the context of basketball. </p>
-  <p>With the slider, Ahmed made it so that it can be played automatically 
-    and that it would increment at a rate of about a year per second. This 
-    rate allows for the transitions to fully show and therefore the bar will 
-    show the corect value before changing to the next year. Regarding the 
-    tooltip, we decided to add it as we believed just having the slider has 
-    not enough interactivity. The tooltip pops up when you hover over the 
-    bar for a team and shows the team name being hovered over as wel as the 
-    exact PPG value, as this can be hard to get on a bar chart. During the 
-    development process, Walter initially had the tooltip follow the position 
-    of the mouse. However, he later decided to attach the tooltip to the 
-    associated bar, as there was a problem with the position of the tooltip 
-    on different computers. Depending on one’s browser and the size of one’s 
-    screen, the tooltip would sometimes not be close to the mouse, instead 
-    being way off while still moving with the mouse in some manner. Nathan 
-    decided that adding logos would make the bars easier to follow and add 
-    helpful redundant encodings. As mentioned in the design decisions above, 
-    this allows for easier differentiation and identification of the bars 
-    without having to trace the bar all the way down to the x-axis. Nathan 
-    also decided to use the links of the team logos from the official NBA 
-    website so that when a team’s logo gets updated, this change would be 
-    reflected in our visualization as well. </p>
-  <p>We were initially planning on making each bar match the colors of the 
-    associated team as well, however Nathan and Ahmed decided that this would 
-    be too confusing and not as color blind friendly. As a result, Walter 
-    decided on the orange color to match that of a basketball and the black 
-    stroke to create contrast between the bars themselves as well as the 
-    background and axes. Walter also decided on the title font based on what 
-    he had seen before in NBA graphics and articles. As a finishing touch, 
-    he also added the NBA logo in the top-left corner of the page to quickly 
-    let readers know that they were dealing with a basketball visualization 
-    if they had some prior knowledge about the professional league.</p>
-  <p>Roles were more or less mentioned above in the development process. 
-    Ahmed was responsible for setting up the Svelte framework and made the 
-    slider as well the function to update the bar chart to match the year. 
-    Nathan was responsible for creating the logos and having them match the 
-    height of the bars to create a helpful visual encoding. Walter was 
-    responsible for creating the tooltip and the remaining auxiliary design 
-    decisions. Ahmed was also responsible for setting up the website. In 
-    general, we worked together for the majority of the project and constantly 
-    bounced ideas and feedback off of each other.</p>
+    <p style="font-size: 24;">
+      A common narrative and topic of debate amongst NBA (National Basketball
+      Association) fans and media is whether teams are scoring too many points
+      and defense is becoming a smaller part of the game. We decided to explore
+      this narrative by plotting the average points scored per game per team
+      over the history of the league, starting from 1950 when the league only
+      comprised of 8 teams.
+    </p>
+    <p>
+      For our data, we decided to get it from Basketball Reference, a widely
+      trusted, although not official, source for basketball data amongst NBA
+      fans and media. We chose to scrape data from Basketball Reference as
+      opposed to NBA.com, the league’s official source for data, because
+      Basketball Reference was much easier to get data and the data was cleaner.
+      Cleaning the data involved filling in zeros for the years when certain
+      teams did not exist yet. Otherwise, the Basketball Reference data was
+      clean and easy to work with.
+    </p>
+    <p>
+      Regarding design decisions, we knew we wanted to do a slider to show data
+      for different years and be able to play it to show the progression of
+      scoring over the years. As a result, we chose to use a bar chart as it was
+      an efficient way to display data for all 30 teams (which are essentially
+      30 categories) for a single year. On top of each individual bar, we
+      decided to add the team’s logo. This is a quick and easy way to identify a
+      team’s bar, if one knows the team logos, without having to look all the
+      way down to the x-axis on top of helping differentiate bars when many can
+      have similar values. For each bar, we have a tooltip that shows the exact
+      points per game (PPG) values for the team being hovered over. This is
+      helpful as in a bar chart it can be hard to get an exact value, especially
+      in the wider chart that we have. The tooltip updates to whatever team it
+      hovers over and the value updates with the incrementing year as long as
+      one’s mouse is moving. For the font of the graph and axes titles, we
+      decided to use the impact font as it matches the font commonly used in NBA
+      graphics on social media and titles of NBA articles. The color of the bars
+      matches the color of a basketball to give a bit of additional semantic
+      encoding.
+    </p>
+    <p>
+      Playing the slider and observing the changes over the years, we can see
+      that teams were scoring very few points in the early years of the league,
+      likely as basketball was still being fleshed out as a serious sport. Over
+      the next three decades until around the 1990s, teams would score a
+      respectable amount of points, with many teams hovering around 110 points
+      per game. Starting in the 90s, teams started scoring significantly less
+      points and averages reached lows not seen since the inception of the
+      league in the 2000s, when some teams were averaging less than 90 points
+      per game. This trend of low scoring games stopped around the mid 2010s,
+      with team scoring averages increasing at an unprecedented rate in the last
+      few years. Our conclusion is that while there is reason for concern with
+      the quick uptick in scoring in not even the last decade. However, this
+      level of scoring has been seen before in the 70s and 80s. Therefore, this
+      fear is most likely exaggerated by older NBA fans who grew up watching the
+      lower scoring style of basketball of the 1990s and 2000s.
+    </p>
+    <p>
+      To begin our development process, we had to decide on a dataset. We all
+      agreed that the datasets we had used for Project 2 were limiting, so we
+      decided to find some new, bigger data. Nathan and Walter were confident in
+      their domain knowledge of the NBA and basketball. Additionally, they knew
+      that there is an abundance of data available from sources such as
+      Basketball Reference and NBA.com.
+    </p>
+    <p>
+      Approaching the project from the perspective of making an interactive
+      visualization, we decided from the start to do something that changes with
+      time, incorporating a slider like we did in Lab 6 and one of the D3
+      examples in lecture. In using a slider, we decided to not do a line chart
+      as it would not make much sense, because line charts typically show
+      progression and trends over a period of time. Having a line for each NBA
+      team would have been too messy. With the bar chart, we decided to limit
+      the y-axis to a range from 0 to 60. The value represented by the bar
+      charts represents the difference in points per game for that team that
+      year from the all time lowest average (70.0 by the Atlanta Hawks in 1953).
+      This allows us to see how much teams have improved at scoring since the
+      worst team near the beginning of the league. This transformation of the
+      data is key as it makes small differences more evident. A seemingly small
+      difference of 5 PPG is extremely significant in the context of basketball.
+    </p>
+    <p>
+      With the slider, Ahmed made it so that it can be played automatically and
+      that it would increment at a rate of about a year per second. This rate
+      allows for the transitions to fully show and therefore the bar will show
+      the corect value before changing to the next year. Regarding the tooltip,
+      we decided to add it as we believed just having the slider has not enough
+      interactivity. The tooltip pops up when you hover over the bar for a team
+      and shows the team name being hovered over as wel as the exact PPG value,
+      as this can be hard to get on a bar chart. During the development process,
+      Walter initially had the tooltip follow the position of the mouse.
+      However, he later decided to attach the tooltip to the associated bar, as
+      there was a problem with the position of the tooltip on different
+      computers. Depending on one’s browser and the size of one’s screen, the
+      tooltip would sometimes not be close to the mouse, instead being way off
+      while still moving with the mouse in some manner. Nathan decided that
+      adding logos would make the bars easier to follow and add helpful
+      redundant encodings. As mentioned in the design decisions above, this
+      allows for easier differentiation and identification of the bars without
+      having to trace the bar all the way down to the x-axis. Nathan also
+      decided to use the links of the team logos from the official NBA website
+      so that when a team’s logo gets updated, this change would be reflected in
+      our visualization as well.
+    </p>
+    <p>
+      We were initially planning on making each bar match the colors of the
+      associated team as well, however Nathan and Ahmed decided that this would
+      be too confusing and not as color blind friendly. As a result, Walter
+      decided on the orange color to match that of a basketball and the black
+      stroke to create contrast between the bars themselves as well as the
+      background and axes. Walter also decided on the title font based on what
+      he had seen before in NBA graphics and articles. As a finishing touch, he
+      also added the NBA logo in the top-left corner of the page to quickly let
+      readers know that they were dealing with a basketball visualization if
+      they had some prior knowledge about the professional league.
+    </p>
+    <p>
+      Roles were more or less mentioned above in the development process. Ahmed
+      was responsible for setting up the Svelte framework and made the slider as
+      well the function to update the bar chart to match the year. Nathan was
+      responsible for creating the logos and having them match the height of the
+      bars to create a helpful visual encoding. Walter was responsible for
+      creating the tooltip and the remaining auxiliary design decisions. Ahmed
+      was also responsible for setting up the website. In general, we worked
+      together for the majority of the project and constantly bounced ideas and
+      feedback off of each other.
+    </p>
   </div>
 </main>
 
@@ -1347,10 +1515,10 @@
     height: 20%;
   }
   #text {
-      font-size: 18px;
-      margin-left: 40px;
-      margin-right: 40px;
-      text-align: justify;
-      font-family:Arial, Helvetica, sans-serif
-    }
+    font-size: 18px;
+    margin-left: 40px;
+    margin-right: 40px;
+    text-align: justify;
+    font-family: Arial, Helvetica, sans-serif;
+  }
 </style>
