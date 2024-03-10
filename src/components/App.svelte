@@ -19,18 +19,22 @@
   let select;
   let xLine;
   let yLine;
+  let xLine2;
+  let yLine2;
   let u;
   let x;
   let y;
   let bars;
   let height;
   let logos;
-  let team_line = ["Boston Celtics", "Sacramento Kings"];
+  let team_line = [];
   let year_avg = [];
   var counter = 0;
   let team_pts = {};
   let tooltip;
   let line;
+  let linePace;
+  let paceData;
   const colors = [
     "#1f77b4",
     "#ff7f0e",
@@ -161,6 +165,9 @@
   };
 
   onMount(() => {
+    d3.csv("NBA_PACE.csv").then((csvdata) => {
+      paceData = csvdata;
+    })
     d3.csv("src/DSC106_NBA.csv").then((csvData) => {
       data = csvData;
       let tempData = cloneDeep(data);
@@ -180,6 +187,7 @@
       renderBarChart5(2022);
       updateTeamPts();
       renderLinePlot(year_avg);
+      renderLinePlotPace();
       checkbox(options);
     });
   });
@@ -864,27 +872,33 @@
       { x: 1250, y: 85 },
     ];
 
-      svg2.append("path")
-          .attr("d", lineFunction(lineData3))
-          .attr("stroke", "gray")
-          .attr("stroke-width", 2)
-          .attr("fill", "none"); 
+    svg2
+      .append("path")
+      .attr("d", lineFunction(lineData3))
+      .attr("stroke", "gray")
+      .attr("stroke-width", 2)
+      .attr("fill", "none");
 
-      const foreignObject = svg2.append("foreignObject")
-          .attr("x", 890)
-          .attr("y", 20)
-          .attr("width", 350)
-          .attr("height", 100);
+    const foreignObject = svg2
+      .append("foreignObject")
+      .attr("x", 890)
+      .attr("y", 20)
+      .attr("width", 350)
+      .attr("height", 100);
 
-      const div = foreignObject.append("xhtml:div")
-          .style("font-size", "14px")
-          .style("color", "black")
-          .style("text-align", "justify");
+    const div = foreignObject
+      .append("xhtml:div")
+      .style("font-size", "14px")
+      .style("color", "black")
+      .style("text-align", "justify");
 
-      div.html("The league scoring average in the 1980 NBA season was 108.1. \
+    div
+      .html(
+        "The league scoring average in the 1980 NBA season was 108.1. \
             This was a typical season in the 70s and 80s, an era dominated by \
-            stars like Kareem Abdul-Jabbar, Magic Johnson, and Larry Bird.")
-          .style("font-size", "14px");
+            stars like Kareem Abdul-Jabbar, Magic Johnson, and Larry Bird.",
+      )
+      .style("font-size", "14px");
   }
 
   function renderBarChart4(year) {
@@ -1023,14 +1037,15 @@
         "Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif",
       )
       .style("font-size", "20px");
-    
-      const lineData1 = [
-          { x: 0, y: 263 },
-          { x: 1220, y: 263 }
-      ];
-      const lineFunction = d3.line()
-          .x(d => d.x)
-          .y(d => d.y);
+
+    const lineData1 = [
+      { x: 0, y: 263 },
+      { x: 1220, y: 263 },
+    ];
+    const lineFunction = d3
+      .line()
+      .x((d) => d.x)
+      .y((d) => d.y);
 
     svg3
       .append("path")
@@ -1260,7 +1275,9 @@
       .style("font-size", "20px");
   }
   function takeAverage(y, d) {
-    var vals = Object.values(d).map((pts) => parseFloat(pts)).filter((value) => value > 0);
+    var vals = Object.values(d)
+      .map((pts) => parseFloat(pts))
+      .filter((value) => value > 0);
     let sum = vals.reduce(
       (accumulator, currentValue) => accumulator + currentValue,
       0,
@@ -1274,88 +1291,77 @@
   }
 
   function updateTeamPts() {
-    console.log(1);
-    team_pts = {}
+    team_pts = {};
     let year_data = cloneDeep(data);
     for (let tm of team_line) {
       counter = 0;
       team_pts[tm] = [];
       for (let yer of year_data) {
-        if (parseFloat(yer[tm]) > 0 ) {
-        var toadd = { year: parseInt(yer.Year), pts: parseFloat(yer[tm]) };
-        team_pts[tm][counter] = toadd;
-        counter++;
+        if (parseFloat(yer[tm]) > 0) {
+          var toadd = { year: parseInt(yer.Year), pts: parseFloat(yer[tm]) };
+          team_pts[tm][counter] = toadd;
+          counter++;
+        }
       }
     }
-    }
   }
 
-  var allAverage = true;
-
-  $: {
-    console.log(team_line);
-    console.log(team_pts);
-    // updateLine(team_pts);
-  }
 
   function updateLine(dataArray) {
     if (team_line.length != 0) {
-    u = line.selectAll(".line").data(Object.values(team_pts));
-    console.log("objects",Object.values(dataArray));
-    
-    u.enter()
-      .append("path")
-      .attr("class", "line")
-      .merge(u)
-      .transition()
-      .duration(1000)
-      .attr(
-        "d",
-        d3
-          .line()
-          .x(function (d) {
-            return xLine(d.year);
-          })
-          .y(function (d) {
-            return yLine(d.pts);
-          })
-          .curve(d3.curveBasis),
-      )
-      .attr("fill", "none")
-      .attr("stroke", (d,i) => colors[i])
-      .attr("stroke-width", 2.5);
-    u.exit().remove();
-        } else {
-          console.log("it ran")
-          renderYearAvg();
-        }
+      u = line.selectAll(".line").data(Object.values(team_pts));
 
-  function renderYearAvg() {
-    u = line.selectAll(".line").data([year_avg]);    
-    u.enter()
-      .append("path")
-      .attr("class", "line")
-      .merge(u)
-      .transition()
-      .duration(1000)
-      .attr(
-        "d",
-        d3
-          .line()
-          .x(function (d) {
-            return xLine(d.year);
-          })
-          .y(function (d) {
-            return yLine(d.avg);
-          })
-          .curve(d3.curveBasis),
-      )
-      .attr("fill", "none")
-      .attr("stroke", (d,i) => colors[i])
-      .attr("stroke-width", 2.5);
-    u.exit().remove();
-  }
+      u.enter()
+        .append("path")
+        .attr("class", "line")
+        .merge(u)
+        .transition()
+        .duration(1000)
+        .attr(
+          "d",
+          d3
+            .line()
+            .x(function (d) {
+              return xLine(d.year);
+            })
+            .y(function (d) {
+              return yLine(d.pts);
+            })
+            .curve(d3.curveBasis),
+        )
+        .attr("fill", "none")
+        .attr("stroke", (d, i) => colors[i])
+        .attr("stroke-width", 2.5);
+      u.exit().remove();
+    } else {
+      renderYearAvg();
+    }
 
+    function renderYearAvg() {
+      u = line.selectAll(".line").data([year_avg]);
+      u.enter()
+        .append("path")
+        .attr("class", "line")
+        .merge(u)
+        .transition()
+        .duration(1000)
+        .attr(
+          "d",
+          d3
+            .line()
+            .x(function (d) {
+              return xLine(d.year);
+            })
+            .y(function (d) {
+              return yLine(d.avg);
+            })
+            .curve(d3.curveBasis),
+        )
+        .attr("fill", "none")
+        .attr("stroke", (d, i) => colors[i])
+        .attr("stroke-width", 2.5);
+      u.exit().remove();
+    }
   }
   function renderLinePlot(dataArray) {
     const margin = { top: 40, right: 120, bottom: 150, left: 60 };
@@ -1366,7 +1372,7 @@
     let minimumY = 0;
     let maximumY = Math.max(...year_avg.map((obj) => obj["avg"])) + 20;
 
-    xLine = d3.scaleLinear().domain([minimumX, maximumX]).range([0, height]);
+    xLine = d3.scaleLinear().domain([minimumX, maximumX]).range([0, width]);
 
     yLine = d3.scaleLinear().domain([minimumY, maximumY]).range([height, 0]);
 
@@ -1386,9 +1392,10 @@
 
     line.append("g").call(d3.axisLeft(yLine));
 
-    line.selectAll("lines")
-    .data([year_avg])
-    .enter()
+    line
+      .selectAll("lines")
+      .data([year_avg])
+      .enter()
       .append("path")
       .attr(
         "d",
@@ -1406,10 +1413,7 @@
       .attr("fill", "none")
       .attr("stroke", "#c5b0d5")
       .attr("stroke-width", 2.5);
-
   }
-
-  
 
   function checkbox(data) {
     select = d3
@@ -1431,6 +1435,58 @@
       updateTeamPts();
       updateLine(team_pts);
     });
+  }
+
+
+  function renderLinePlotPace() {
+    const margin = { top: 40, right: 120, bottom: 150, left: 60 };
+    const width = 1400 - margin.left - margin.right;
+    height = 600 - margin.top - margin.bottom;
+    let minimumX = Math.min(...paceData.map((obj) => parseInt(obj["Year"])));
+    let maximumX = Math.max(...paceData.map((obj) => parseInt(obj["Year"])));
+    let minimumY = 0;
+    let maximumY = Math.max(...paceData.map((obj) => obj["Pace"])) + 20;
+
+    xLine2 = d3.scaleLinear().domain([minimumX, maximumX]).range([0, width]);
+
+    yLine2 = d3.scaleLinear().domain([minimumY, maximumY]).range([height, 0]);
+
+    linePace = d3
+      .select("#linechartpace")
+      .append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+      .attr("transform", `translate(${margin.left},${margin.top})`);
+
+    linePace
+      .append("g")
+      .attr("transform", `translate(0,${height})`)
+      .call(d3.axisBottom(xLine2));
+
+    linePace.append("g").call(d3.axisLeft(yLine2));
+
+    linePace
+      .selectAll("lines")
+      .data([paceData])
+      .enter()
+      .append("path")
+      .attr(
+        "d",
+        d3
+          .line()
+          .x(function (d) {
+            return xLine2(d.Year);
+          })
+          .y(function (d) {
+            return yLine2(d.Pace);
+          })
+          .curve(d3.curveBasis),
+      )
+      .attr("class", "linepace")
+      .attr("fill", "none")
+      .attr("stroke", "#c5b0d5")
+      .attr("stroke-width", 2.5);
   }
 </script>
 
@@ -1477,8 +1533,11 @@
       Lowest Average
     </h2>
   </div>
-  <div id = "chart4" class="chart_class">
-    <h2 style="text-align: left;">NBA Teams Difference in Average Points per Game in 1998 From All Time Lowest Average</h2>
+  <div id="chart4" class="chart_class">
+    <h2 style="text-align: left;">
+      NBA Teams Difference in Average Points per Game in 1998 From All Time
+      Lowest Average
+    </h2>
   </div>
   <div id="chart5" class="chart_class">
     <h2 style="text-align: left;">
@@ -1489,8 +1548,10 @@
   <div id="highlightable-box" class="highlightable-box">
     <!-- Highlightable elements (team names) will be rendered here -->
   </div>
-  <div id="body"><h2>Select teams to view: </h2></div>
-  <div id="linechart"></div>
+  <div id="body"><h2>Select teams to view:</h2><p>You can select multiple teams by either click and drag or by holding command/ctrl and clicking on the desired teams</p></div>
+  <div id="linechart" class="chart_class"><h2>Points Line</h2></div>
+  <div id="linechartpace" class="chart_class"><h2>Pace Line</h2></div>
+
 
   <div id="text">
     <h3 style="text-align: left;">Design Process and Decisions</h3>
