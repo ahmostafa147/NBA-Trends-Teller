@@ -1260,7 +1260,7 @@
       .style("font-size", "20px");
   }
   function takeAverage(y, d) {
-    var vals = Object.values(d).map((pts) => parseFloat(pts));
+    var vals = Object.values(d).map((pts) => parseFloat(pts)).filter((value) => value > 0);
     let sum = vals.reduce(
       (accumulator, currentValue) => accumulator + currentValue,
       0,
@@ -1281,10 +1281,12 @@
       counter = 0;
       team_pts[tm] = [];
       for (let yer of year_data) {
+        if (parseFloat(yer[tm]) > 0 ) {
         var toadd = { year: parseInt(yer.Year), pts: parseFloat(yer[tm]) };
         team_pts[tm][counter] = toadd;
         counter++;
       }
+    }
     }
   }
 
