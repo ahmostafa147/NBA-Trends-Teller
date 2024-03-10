@@ -15,22 +15,88 @@
   let svg1;
   let svg2;
   let svg3;
-  let svg4;
   let svg5;
+  let select;
+  let xLine;
+  let yLine;
+  let u;
   let x;
   let y;
   let bars;
   let height;
   let logos;
-  let mouseX;
-  let mouseY;
-  let team_line = [];
+  let team_line = ["Boston Celtics", "Sacramento Kings"];
   let year_avg = [];
   var counter = 0;
-  let team_pts = [];
+  let team_pts = {};
   let tooltip;
-  let year_data;
   let line;
+  const colors = [
+    "#1f77b4",
+    "#ff7f0e",
+    "#2ca02c",
+    "#d62728",
+    "#9467bd",
+    "#8c564b",
+    "#e377c2",
+    "#7f7f7f",
+    "#bcbd22",
+    "#17becf",
+    "#aec7e8",
+    "#ffbb78",
+    "#98df8a",
+    "#ff9896",
+    "#c5b0d5",
+    "#c49c94",
+    "#f7b6d2",
+    "#c7c7c7",
+    "#dbdb8d",
+    "#9edae5",
+    "#393b79",
+    "#ff9896",
+    "#2ca02c",
+    "#d62728",
+    "#9467bd",
+    "#8c564b",
+    "#1f77b4",
+    "#7f7f7f",
+    "#bcbd22",
+    "#17becf",
+    "#aec7e8",
+  ];
+
+  const options = [
+    "Boston Celtics",
+    "New York Knicks",
+    "Golden State Warriors",
+    "Sacramento Kings",
+    "Los Angeles Lakers",
+    "Detroit Pistons",
+    "Philadelphia 76ers",
+    "Atlanta Hawks",
+    "Washington Wizards",
+    "Chicago Bulls",
+    "Houston Rockets",
+    "Oklahoma City Thunder",
+    "Brooklyn Nets",
+    "Denver Nuggets",
+    "Indiana Pacers",
+    "San Antonio Spurs",
+    "Milwaukee Bucks",
+    "Phoenix Suns",
+    "Cleveland Cavaliers",
+    "Los Angeles Clippers",
+    "Portland Trail Blazers",
+    "Utah Jazz",
+    "Dallas Mavericks",
+    "Miami Heat",
+    "Orlando Magic",
+    "Minnesota Timberwolves",
+    "Charlotte Hornets",
+    "Memphis Grizzlies",
+    "Toronto Raptors",
+    "New Orleans Pelicans",
+  ];
 
   const teamLogos = {
     "Atlanta Hawks": "modeling_plot/src/components/logos/atlanta hawks.svg",
@@ -97,12 +163,24 @@
   onMount(() => {
     d3.csv("src/DSC106_NBA.csv").then((csvData) => {
       data = csvData;
+      let tempData = cloneDeep(data);
+      for (let yr_data of tempData) {
+        let toAdd = {};
+        toAdd["year"] = parseInt(yr_data.Year);
+        var yr = yr_data.Year;
+        delete yr_data.Year;
+        toAdd["avg"] = takeAverage(yr, yr_data);
+        year_avg[counter] = toAdd;
+        counter++;
+      }
       renderBarChart(year);
       renderBarChart2(1953);
       renderBarChart3(1980);
       renderBarChart4(1998);
       renderBarChart5(2022);
-      renderLinePlot();
+      updateTeamPts();
+      renderLinePlot(year_avg);
+      checkbox(options);
     });
   });
 
@@ -260,7 +338,7 @@
     // );
     // console.log(event.toElement);
     let [mouseX, mouseY] = d3.pointer(event);
-    console.log(mouseX, mouseY);
+    // console.log(mouseX, mouseY);
     tooltip.attr(
       "transform",
       `translate(${mouseX + 10}, ${mouseY - tooltipHeight + 5})`,
@@ -352,7 +430,6 @@
 
     bars.exit().remove();
   }
-
   function updateYear(newYear) {
     year = newYear;
     updateBars(year);
@@ -1189,37 +1266,96 @@
       0,
     );
     let average = sum / vals.length;
-    return { year: parseInt(y), avg: parseFloat(average.toFixed(1)) };
+    return parseFloat(average.toFixed(1));
   }
 
   function teamData(y, d, teams) {
     return { year: y, pts: d, team: teams };
   }
-  function renderLinePlot() {
-    team_line = ["Boston Celtics", "New York Knicks"];
-    year_avg = [];
-    counter = 0;
-    team_pts = [];
-    year_data = cloneDeep(data);
-    for (let yr_data in year_data) {
-      if (counter <= 76) {
-        var yr = year_data[counter].Year;
-        delete year_data[counter].Year;
-        year_avg[counter] = takeAverage(yr, year_data[counter]);
-        team_pts[counter] = year_data[counter].Year;
-        counter++;
-      }
-    }
-    year_data = cloneDeep(data);
-    counter = 0;
-    for (let yer of year_data) {
-      for (let tm of teams) {
-        var yr = yer.Year;
-        team_pts[counter] = teamData(yr, yer[tm], tm);
-        counter++;
-      }
-    }
 
+  function updateTeamPts() {
+    console.log(1);
+    team_pts = {}
+    let year_data = cloneDeep(data);
+    for (let tm of team_line) {
+      counter = 0;
+      team_pts[tm] = [];
+      for (let yer of year_data) {
+        var toadd = { year: parseInt(yer.Year), pts: parseFloat(yer[tm]) };
+        team_pts[tm][counter] = toadd;
+        counter++;
+      }
+    }
+  }
+
+  var allAverage = true;
+
+  $: {
+    console.log(team_line);
+    console.log(team_pts);
+    // updateLine(team_pts);
+  }
+
+  function updateLine(dataArray) {
+    if (team_line.length != 0) {
+    u = line.selectAll(".line").data(Object.values(team_pts));
+    console.log("objects",Object.values(dataArray));
+    
+    u.enter()
+      .append("path")
+      .attr("class", "line")
+      .merge(u)
+      .transition()
+      .duration(1000)
+      .attr(
+        "d",
+        d3
+          .line()
+          .x(function (d) {
+            return xLine(d.year);
+          })
+          .y(function (d) {
+            return yLine(d.pts);
+          })
+          .curve(d3.curveBasis),
+      )
+      .attr("fill", "none")
+      .attr("stroke", (d,i) => colors[i])
+      .attr("stroke-width", 2.5);
+    u.exit().remove();
+        } else {
+          console.log("it ran")
+          renderYearAvg();
+        }
+
+  function renderYearAvg() {
+    u = line.selectAll(".line").data([year_avg]);    
+    u.enter()
+      .append("path")
+      .attr("class", "line")
+      .merge(u)
+      .transition()
+      .duration(1000)
+      .attr(
+        "d",
+        d3
+          .line()
+          .x(function (d) {
+            return xLine(d.year);
+          })
+          .y(function (d) {
+            return yLine(d.avg);
+          })
+          .curve(d3.curveBasis),
+      )
+      .attr("fill", "none")
+      .attr("stroke", (d,i) => colors[i])
+      .attr("stroke-width", 2.5);
+    u.exit().remove();
+  }
+
+  }
+  function renderLinePlot(dataArray) {
     const margin = { top: 40, right: 120, bottom: 150, left: 60 };
     const width = 1400 - margin.left - margin.right;
     height = 600 - margin.top - margin.bottom;
@@ -1228,15 +1364,9 @@
     let minimumY = 0;
     let maximumY = Math.max(...year_avg.map((obj) => obj["avg"])) + 20;
 
-    const x = d3.scaleLinear().domain([minimumX, maximumX]).range([0, height]);
+    xLine = d3.scaleLinear().domain([minimumX, maximumX]).range([0, height]);
 
-    const y = d3.scaleLinear().domain([minimumY, maximumY]).range([height, 0]);
-
-    var lineFunction = d3
-      .line()
-      .x((d) => d.year)
-      .y((d) => d.avg)
-      .curve(d3.curveBasis);
+    yLine = d3.scaleLinear().domain([minimumY, maximumY]).range([height, 0]);
 
     line = d3
       .select("#linechart")
@@ -1245,36 +1375,60 @@
       .attr("height", height + margin.top + margin.bottom)
       .append("g")
       .attr("transform", `translate(${margin.left},${margin.top})`);
+    line.exit().remove();
 
     line
       .append("g")
       .attr("transform", `translate(0,${height})`)
-      .call(d3.axisBottom(x));
+      .call(d3.axisBottom(xLine));
 
-    line.append("g").call(d3.axisLeft(y));
+    line.append("g").call(d3.axisLeft(yLine));
 
-    var u = line.selectAll(".lineTest").data([year_avg]);
-
-    u.enter()
+    line.selectAll("lines")
+    .data([year_avg])
+    .enter()
       .append("path")
-      .attr("class", "lineTest")
-      .merge(u)
-      .transition()
-      .duration(3000)
       .attr(
         "d",
         d3
           .line()
           .x(function (d) {
-            return x(d.year);
+            return xLine(d.year);
           })
           .y(function (d) {
-            return y(d.avg);
-          }),
+            return yLine(d.avg);
+          })
+          .curve(d3.curveBasis),
       )
+      .attr("class", "line")
       .attr("fill", "none")
-      .attr("stroke", "steelblue")
+      .attr("stroke", "#c5b0d5")
       .attr("stroke-width", 2.5);
+
+  }
+
+  
+
+  function checkbox(data) {
+    select = d3
+      .select("#body")
+      .append("select")
+      .attr("multiple", true)
+      .attr("size", 8);
+    select
+      .selectAll("option")
+      .data(data)
+      .enter()
+      .append("option")
+      .attr("value", (d) => d)
+      .text((d) => d);
+
+    select.on("change", function () {
+      const options = this.selectedOptions;
+      team_line = Array.from(options).map((option) => option.value);
+      updateTeamPts();
+      updateLine(team_pts);
+    });
   }
 </script>
 
@@ -1330,9 +1484,11 @@
       Lowest Average
     </h2>
   </div>
-  <div id="linechart">
-
+  <div id="highlightable-box" class="highlightable-box">
+    <!-- Highlightable elements (team names) will be rendered here -->
   </div>
+  <div id="body"><h2>Select teams to view: </h2></div>
+  <div id="linechart"></div>
 
   <div id="text">
     <h3 style="text-align: left;">Design Process and Decisions</h3>
