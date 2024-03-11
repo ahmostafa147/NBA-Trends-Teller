@@ -295,7 +295,7 @@
           .attr("dy", "0.35em")
           .attr("text-anchor", "middle")
           .style("font-size", "12px")
-          .text(`PPG: ${d.score}`);
+          .text(`PPG Diff: ${d.score}`);
       })
       .on("mousemove", (event, d) => {
         updateTooltipPosition(event, d, svg);
