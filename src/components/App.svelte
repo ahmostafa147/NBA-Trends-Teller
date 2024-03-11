@@ -303,6 +303,7 @@
       .on("mouseout", (event) => {
         svg.select(".tooltip").remove();
       });
+
     svg
       .append("text")
       .attr("transform", `translate(${width / 2}, ${height + 120})`) // Adjust the position as needed
@@ -575,6 +576,7 @@
       .on("mouseout", (event) => {
         svg1.select(".tooltip").remove();
       });
+
     svg1
       .append("text")
       .attr("transform", `translate(${width / 2}, ${height + 120})`) // Adjust the position as needed
@@ -638,6 +640,7 @@
     //   from which we compare all other team averages over the next decades.")
     //   .style("text-align", "justify")
     //   .style("font-size", "12px");
+
     const foreignObject = svg1
       .append("foreignObject")
       .attr("x", 400)
@@ -815,6 +818,7 @@
       .on("mouseout", (event) => {
         svg2.select(".tooltip").remove();
       });
+
     svg2
       .append("text")
       .attr("transform", `translate(${width / 2}, ${height + 120})`) // Adjust the position as needed
@@ -1014,6 +1018,7 @@
       .on("mouseout", (event) => {
         svg3.select(".tooltip").remove();
       });
+
     svg3
       .append("text")
       .attr("transform", `translate(${width / 2}, ${height + 120})`) // Adjust the position as needed
@@ -1043,6 +1048,7 @@
       { x: 0, y: 263 },
       { x: 1220, y: 263 },
     ];
+
     const lineFunction = d3
       .line()
       .x((d) => d.x)
@@ -1201,6 +1207,7 @@
       .on("mouseout", (event) => {
         svg5.select(".tooltip").remove();
       });
+
     svg5
       .append("text")
       .attr("transform", `translate(${width / 2}, ${height + 120})`) // Adjust the position as needed
@@ -1319,6 +1326,7 @@
     const margin = { top: 40, right: 120, bottom: 150, left: 60 };
     const width = 1400 - margin.left - margin.right;
     height = 600 - margin.top - margin.bottom;
+
     let minimumX = Math.min(...year_avg.map((obj) => parseInt(obj["year"])));
     let maximumX = Math.max(...year_avg.map((obj) => parseInt(obj["year"])));
     let minimumY = 0;
@@ -1665,7 +1673,6 @@
 <style>
   #overlay {
     font-size: 0.9em;
-    /* background-color: rgba(157, 152, 152, 0.2); */
     /* position: absolute; */
     margin-left: auto; 
     margin-right: 0;
@@ -1676,6 +1683,7 @@
     padding: 10px;
     z-index: 3;
   }
+
   input {
     display: inline-block;
     width: 100%;
@@ -1683,6 +1691,7 @@
     margin: 0;
     cursor: pointer;
   }
+
   label {
     font-size: 1.5em;
     font-family: sans-serif;
@@ -1701,15 +1710,14 @@
 
   h2 {
     font-size: 24px;
-    /* color: #FA8320; */
     font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
   }
 
   h1 {
     font-size: 36px;
     font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
-    /* color: #FA8320; */
   }
+
   img {
     position: absolute;
     /* margin-right: auto; 
@@ -1718,6 +1726,7 @@
     left: 0;
     height: 20%;
   }
+
   #text, .paragraph_annotation {
     font-size: 18px;
     margin-left: 40px;
