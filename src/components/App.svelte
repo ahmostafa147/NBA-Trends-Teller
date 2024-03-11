@@ -201,7 +201,7 @@
         const logo = teamLogos[key];
         return {
           team: key,
-          score: value,
+          score: value - minVal,
           logo:
             logo ||
             "https://cdn.freebiesupply.com/images/large/2x/nba-logo-transparent.png",
@@ -222,7 +222,7 @@
 
     x = d3.scaleBand().domain(keys).range([0, width]).padding(0.1);
 
-    y = d3.scaleLinear().domain([minVal, maxVal]).range([height, 0]);
+    y = d3.scaleLinear().domain([minVal - minVal, maxVal - minVal]).range([height, 0]);
 
     svg
       .append("g")
@@ -321,7 +321,7 @@
       .attr("x", 0 - height / 2)
       .attr("dy", "1em")
       .style("text-anchor", "middle")
-      .text("Average Points Per Game")
+      .text("Average Points Per Game Difference")
       .style(
         "font-family",
         "Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif",
@@ -357,7 +357,8 @@
     // console.log(tooltip.selectAll('text'));
     // const first = tooltip.select('text')
     // tooltip.select('text').text(`${d.team}: ${d.score}`);
-    tooltip.select("text:nth-child(3)").text(`PPG: ${d.score}`);
+    tooltip.select("text:nth-child(3)").text(`PPG Diff: ${Math.round(d.score * 100) / 100}`);
+    // tooltip.select("text:nth-child(3)").text(`PPG: ${d.score}`);
     // tooltip.selectAll('text').text(`${d.team}: ${d.score}`);
   }
 
@@ -367,7 +368,7 @@
     values = Object.entries(teams[0])
       .filter((entry) => entry[0] !== "Year")
       .map(([key, value]) => {
-        return { team: key, score: value };
+        return { team: key, score: value - minVal };
       });
 
     bars = svg.selectAll("rect").data(values);
@@ -471,7 +472,7 @@
         const logo = teamLogos[key];
         return {
           team: key,
-          score: value,
+          score: value - minVal,
           logo:
             logo ||
             "https://cdn.freebiesupply.com/images/large/2x/nba-logo-transparent.png",
@@ -492,7 +493,7 @@
 
     x = d3.scaleBand().domain(keys).range([0, width]).padding(0.1);
 
-    y = d3.scaleLinear().domain([minVal, maxVal]).range([height, 0]);
+    y = d3.scaleLinear().domain([minVal - minVal, maxVal - minVal]).range([height, 0]);
 
     svg1
       .append("g")
@@ -592,7 +593,7 @@
       .attr("x", 0 - height / 2)
       .attr("dy", "1em")
       .style("text-anchor", "middle")
-      .text("Average Points Per Game")
+      .text("Average Points Per Game Difference")
       .style(
         "font-family",
         "Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif",
@@ -711,7 +712,7 @@
         const logo = teamLogos[key];
         return {
           team: key,
-          score: value,
+          score: value - minVal,
           logo:
             logo ||
             "https://cdn.freebiesupply.com/images/large/2x/nba-logo-transparent.png",
@@ -732,7 +733,7 @@
 
     x = d3.scaleBand().domain(keys).range([0, width]).padding(0.1);
 
-    y = d3.scaleLinear().domain([minVal, maxVal]).range([height, 0]);
+    y = d3.scaleLinear().domain([minVal - minVal, maxVal - minVal]).range([height, 0]);
 
     svg2
       .append("g")
@@ -832,7 +833,7 @@
       .attr("x", 0 - height / 2)
       .attr("dy", "1em")
       .style("text-anchor", "middle")
-      .text("Average Points Per Game")
+      .text("Average Points Per Game Differece")
       .style(
         "font-family",
         "Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif",
@@ -910,7 +911,7 @@
         const logo = teamLogos[key];
         return {
           team: key,
-          score: value,
+          score: value - minVal,
           logo:
             logo ||
             "https://cdn.freebiesupply.com/images/large/2x/nba-logo-transparent.png",
@@ -931,7 +932,7 @@
 
     x = d3.scaleBand().domain(keys).range([0, width]).padding(0.1);
 
-    y = d3.scaleLinear().domain([minVal, maxVal]).range([height, 0]);
+    y = d3.scaleLinear().domain([minVal - minVal, maxVal - minVal]).range([height, 0]);
 
     svg3
       .append("g")
@@ -1031,7 +1032,7 @@
       .attr("x", 0 - height / 2)
       .attr("dy", "1em")
       .style("text-anchor", "middle")
-      .text("Average Points Per Game")
+      .text("Average Points Per Game Difference")
       .style(
         "font-family",
         "Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif",
@@ -1055,8 +1056,8 @@
       .attr("fill", "none");
 
     const lineData2 = [
-      { x: 805, y: 200 },
-      { x: 900, y: 100 },
+      { x: 805, y: 263 },
+      { x: 900, y: 163 },
     ];
 
     svg3
@@ -1067,8 +1068,8 @@
       .attr("fill", "none");
 
     const lineData3 = [
-      { x: 900, y: 100 },
-      { x: 1250, y: 100 },
+      { x: 900, y: 163 },
+      { x: 1250, y: 163 },
     ];
 
     svg3
@@ -1081,10 +1082,10 @@
     svg3
       .append("text")
       .attr("x", 900)
-      .attr("y", 90)
+      .attr("y", 158)
       .attr("font-size", "14px")
       .attr("fill", "black")
-      .text("ASS. STRAIGHT ASS.")
+      .text("Annotation placeholder")
       .style("font-size", "20px");
   }
 
@@ -1097,7 +1098,7 @@
         const logo = teamLogos[key];
         return {
           team: key,
-          score: value,
+          score: value - minVal,
           logo:
             logo ||
             "https://cdn.freebiesupply.com/images/large/2x/nba-logo-transparent.png",
@@ -1118,7 +1119,7 @@
 
     x = d3.scaleBand().domain(keys).range([0, width]).padding(0.1);
 
-    y = d3.scaleLinear().domain([minVal, maxVal]).range([height, 0]);
+    y = d3.scaleLinear().domain([minVal - minVal, maxVal - minVal]).range([height, 0]);
 
     svg5
       .append("g")
@@ -1218,60 +1219,11 @@
       .attr("x", 0 - height / 2)
       .attr("dy", "1em")
       .style("text-anchor", "middle")
-      .text("Average Points Per Game")
+      .text("Average Points Per Game Difference")
       .style(
         "font-family",
         "Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif",
       )
-      .style("font-size", "20px");
-
-    const lineData1 = [
-      { x: 0, y: 200 },
-      { x: 1220, y: 200 },
-    ];
-    const lineFunction = d3
-      .line()
-      .x((d) => d.x)
-      .y((d) => d.y);
-
-    svg5
-      .append("path")
-      .attr("d", lineFunction(lineData1))
-      .attr("stroke", "red")
-      .attr("stroke-width", 2)
-      .attr("fill", "none");
-
-    const lineData2 = [
-      { x: 805, y: 200 },
-      { x: 900, y: 100 },
-    ];
-
-    svg5
-      .append("path")
-      .attr("d", lineFunction(lineData2))
-      .attr("stroke", "gray")
-      .attr("stroke-width", 2)
-      .attr("fill", "none");
-
-    const lineData3 = [
-      { x: 900, y: 100 },
-      { x: 1250, y: 100 },
-    ];
-
-    svg5
-      .append("path")
-      .attr("d", lineFunction(lineData3))
-      .attr("stroke", "gray")
-      .attr("stroke-width", 2)
-      .attr("fill", "none");
-
-    svg5
-      .append("text")
-      .attr("x", 900)
-      .attr("y", 90)
-      .attr("font-size", "14px")
-      .attr("fill", "black")
-      .text("ASS. STRAIGHT ASS.")
       .style("font-size", "20px");
   }
   function takeAverage(y, d) {
@@ -1411,7 +1363,7 @@
       )
       .attr("class", "line")
       .attr("fill", "none")
-      .attr("stroke", "#c5b0d5")
+      .attr("stroke", "red")
       .attr("stroke-width", 2.5);
   }
 
@@ -1485,13 +1437,13 @@
       )
       .attr("class", "linepace")
       .attr("fill", "none")
-      .attr("stroke", "#c5b0d5")
+      .attr("stroke", "red")
       .attr("stroke-width", 2.5);
   }
 </script>
 
 <main>
-  <div id="chart" class="chart_class">
+  <div id="title">
     <h1>
       Is Defense Dying in the NBA?<img
         src="https://images.ctfassets.net/h8q6lxmb5akt/5qXnOINbPrHKXWa42m6NOa/421ab176b501f5bdae71290a8002545c/nba-logo_2x.png"
@@ -1499,6 +1451,15 @@
         alt="NBA"
       />
     </h1>
+    <div id="hook">
+      <p>HOOK TEXT PLACEHOLDER</p>
+      <p>HOOK TEXT PLACEHOLDER</p>
+      <p>HOOK TEXT PLACEHOLDER</p>
+      <p>HOOK TEXT PLACEHOLDER</p>
+      <p>HOOK TEXT PLACEHOLDER</p>
+    </div>
+  </div>
+  <div id="chart" class="chart_class">
     <h2 style="text-align: left;">
       NBA Teams Difference in Average Points per Game in {year} From All Time Lowest
       Average
@@ -1520,12 +1481,17 @@
       {/if}
     </div>
   </div>
-
+  <div class="paragraph_annotation">
+    <p>PARAGRAPH ANNOTATION PLACEHOLDER</p>
+  </div>
   <div id="chart2" class="chart_class">
     <h2 style="text-align: left;">
       NBA Teams Difference in Average Points per Game in 1953 From All Time
       Lowest Average
     </h2>
+  </div>
+  <div class="paragraph_annotation">
+    <p>PARAGRAPH ANNOTATION PLACEHOLDER</p>
   </div>
   <div id="chart3" class="chart_class">
     <h2 style="text-align: left;">
@@ -1533,11 +1499,17 @@
       Lowest Average
     </h2>
   </div>
+  <div class="paragraph_annotation">
+    <p>PARAGRAPH ANNOTATION PLACEHOLDER</p>
+  </div>
   <div id="chart4" class="chart_class">
     <h2 style="text-align: left;">
       NBA Teams Difference in Average Points per Game in 1998 From All Time
       Lowest Average
     </h2>
+  </div>
+  <div class="paragraph_annotation">
+    <p>PARAGRAPH ANNOTATION PLACEHOLDER</p>
   </div>
   <div id="chart5" class="chart_class">
     <h2 style="text-align: left;">
@@ -1545,14 +1517,21 @@
       Lowest Average
     </h2>
   </div>
+  <div class="paragraph_annotation">
+    <p>PARAGRAPH ANNOTATION PLACEHOLDER</p>
+  </div>
   <div id="highlightable-box" class="highlightable-box">
     <!-- Highlightable elements (team names) will be rendered here -->
   </div>
   <div id="body"><h2>Select teams to view:</h2><p>You can select multiple teams by either click and drag or by holding command/ctrl and clicking on the desired teams</p></div>
   <div id="linechart" class="chart_class"><h2>Points Line</h2></div>
+  <div class="paragraph_annotation">
+    <p>PARAGRAPH ANNOTATION PLACEHOLDER</p>
+  </div>
   <div id="linechartpace" class="chart_class"><h2>Pace Line</h2></div>
-
-
+  <div class="paragraph_annotation">
+    <p>PARAGRAPH ANNOTATION PLACEHOLDER</p>
+  </div>
   <div id="text">
     <h3 style="text-align: left;">Design Process and Decisions</h3>
     <p style="font-size: 24;">
@@ -1687,7 +1666,9 @@
   #overlay {
     font-size: 0.9em;
     /* background-color: rgba(157, 152, 152, 0.2); */
-    position: absolute;
+    /* position: absolute; */
+    margin-left: auto; 
+    margin-right: 0;
     min-width: 250px;
     width: 15%;
     top: 180px;
@@ -1708,7 +1689,7 @@
     font-weight: bold;
   }
 
-  .chart_class {
+  .chart_class, #title {
     background-color: antiquewhite;
     margin: auto;
     display: flex;
@@ -1731,11 +1712,13 @@
   }
   img {
     position: absolute;
+    /* margin-right: auto; 
+    margin-left: 0; */
     top: 0;
     left: 0;
     height: 20%;
   }
-  #text {
+  #text, .paragraph_annotation {
     font-size: 18px;
     margin-left: 40px;
     margin-right: 40px;
