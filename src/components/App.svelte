@@ -168,7 +168,7 @@
     d3.csv("NBA_PACE.csv").then((csvdata) => {
       paceData = csvdata;
     })
-    d3.csv("src/DSC106_NBA.csv").then((csvData) => {
+    d3.csv("DSC106_NBA.csv").then((csvData) => {
       data = csvData;
       let tempData = cloneDeep(data);
       for (let yr_data of tempData) {
