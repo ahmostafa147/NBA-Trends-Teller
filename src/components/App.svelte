@@ -21,6 +21,9 @@
   let yLine;
   let xLine2;
   let yLine2;
+  let line3;
+  let xLine3;
+  let yLine3;
   let u;
   let x;
   let y;
@@ -29,8 +32,11 @@
   let logos;
   let team_line = [];
   let year_avg = [];
+  let year_three_avg = [];
   var counter = 0;
   let team_pts = {};
+  let team_3pts = {};
+  let threepointData;
   let tooltip;
   let line;
   let linePace;
@@ -165,10 +171,17 @@
   };
 
   onMount(() => {
-    d3.csv("NBA_PACE.csv").then((csvdata) => {
+    d3.csv("src/NBA_PACE.csv").then((csvdata) => {
       paceData = csvdata;
     })
+<<<<<<< Updated upstream
     d3.csv("DSC106_NBA.csv").then((csvData) => {
+=======
+    d3.csv("src/NBA_3PA.csv").then((csvdata) => {
+      threepointData = csvdata;
+    })
+    d3.csv("src/DSC106_NBA.csv").then((csvData) => {
+>>>>>>> Stashed changes
       data = csvData;
       let tempData = cloneDeep(data);
       for (let yr_data of tempData) {
@@ -189,6 +202,19 @@
       renderLinePlot(year_avg);
       renderLinePlotPace();
       checkbox(options);
+      let threeData = cloneDeep(threepointData);
+      counter=0
+      for (let yr_data of threeData) {
+        let toAdd3 = {};
+        toAdd3["year"] = parseInt(yr_data.Year);
+        var yr3pt = yr_data.Year;
+        delete yr_data.Year;
+        toAdd3["avg"] = takeAverage(yr3pt, yr_data);
+        year_three_avg[counter] = toAdd3;
+        counter++;
+      }
+      updateTeam3Pts();
+      renderLinePlotThree(year_three_avg);
     });
   });
 
@@ -1265,6 +1291,22 @@
     }
   }
 
+  function updateTeam3Pts() {
+    team_3pts = {};
+    let year_data_3 = cloneDeep(threepointData);
+    for (let tm of team_line) {
+      counter = 0;
+      team_3pts[tm] = [];
+      for (let yer of year_data_3) {
+        if (parseFloat(yer[tm]) > 0) {
+          var toadd = { year: parseInt(yer.Year), pts: parseFloat(yer[tm]) };
+          team_3pts[tm][counter] = toadd;
+          counter++;
+        }
+      }
+    }
+  }
+
 
   function updateLine(dataArray) {
     if (team_line.length != 0) {
@@ -1322,6 +1364,7 @@
       u.exit().remove();
     }
   }
+
   function renderLinePlot(dataArray) {
     const margin = { top: 40, right: 120, bottom: 150, left: 60 };
     const width = 1400 - margin.left - margin.right;
@@ -1396,6 +1439,81 @@
       updateLine(team_pts);
     });
   }
+
+  function renderLinePlotThree(dataArray) {
+    const margin = { top: 40, right: 120, bottom: 150, left: 60 };
+    const width = 1400 - margin.left - margin.right;
+    height = 600 - margin.top - margin.bottom;
+
+    let minimumX = Math.min(...year_avg.map((obj) => parseInt(obj["year"])));
+    let maximumX = Math.max(...year_avg.map((obj) => parseInt(obj["year"])));
+    let minimumY = 0;
+    let maximumY = Math.max(...year_avg.map((obj) => obj["avg"])) + 20;
+
+    xLine3 = d3.scaleLinear().domain([minimumX, maximumX]).range([0, width]);
+
+    yLine3 = d3.scaleLinear().domain([minimumY, maximumY]).range([height, 0]);
+
+    line3 = d3
+      .select("#linechart2")
+      .append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+      .attr("transform", `translate(${margin.left},${margin.top})`);
+    line3.exit().remove();
+
+    line3
+      .append("g")
+      .attr("transform", `translate(0,${height})`)
+      .call(d3.axisBottom(xLine));
+
+    line3.append("g").call(d3.axisLeft(yLine));
+
+    line3
+      .selectAll("lines")
+      .data([year_three_avg])
+      .enter()
+      .append("path")
+      .attr(
+        "d",
+        d3
+          .line()
+          .x(function (d) {
+            return xLine(d.year);
+          })
+          .y(function (d) {
+            return yLine(d.avg);
+          })
+          .curve(d3.curveBasis),
+      )
+      .attr("class", "line")
+      .attr("fill", "none")
+      .attr("stroke", "red")
+      .attr("stroke-width", 2.5);
+  }
+
+  // function checkbox(data) {
+  //   select = d3
+  //     .select("#body")
+  //     .append("select")
+  //     .attr("multiple", true)
+  //     .attr("size", 8);
+  //   select
+  //     .selectAll("option")
+  //     .data(data)
+  //     .enter()
+  //     .append("option")
+  //     .attr("value", (d) => d)
+  //     .text((d) => d);
+
+  //   select.on("change", function () {
+  //     const options = this.selectedOptions;
+  //     team_line = Array.from(options).map((option) => option.value);
+  //     updateTeamPts();
+  //     updateLine(team_pts);
+  //   });
+  // }
 
 
   function renderLinePlotPace() {
@@ -1533,6 +1651,10 @@
   </div>
   <div id="body"><h2>Select teams to view:</h2><p>You can select multiple teams by either click and drag or by holding command/ctrl and clicking on the desired teams</p></div>
   <div id="linechart" class="chart_class"><h2>Points Line</h2></div>
+  <div class="paragraph_annotation">
+    <p>PARAGRAPH ANNOTATION PLACEHOLDER</p>
+  </div>
+  <div id="linechart2" class="chart_class"><h2>Three Points Line</h2></div>
   <div class="paragraph_annotation">
     <p>PARAGRAPH ANNOTATION PLACEHOLDER</p>
   </div>
