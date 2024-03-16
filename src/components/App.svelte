@@ -17,6 +17,7 @@
   let svg3;
   let svg5;
   let select;
+  let select2;
   let xLine;
   let yLine;
   let xLine2;
@@ -25,12 +26,14 @@
   let xLine3;
   let yLine3;
   let u;
+  let u3;
   let x;
   let y;
   let bars;
   let height;
   let logos;
   let team_line = [];
+  let team_3pt_line = [];
   let year_avg = [];
   let year_three_avg = [];
   var counter = 0;
@@ -211,6 +214,7 @@
       }
       updateTeam3Pts();
       renderLinePlotThree(year_three_avg);
+      checkbox3pt(options);
     });
   });
 
@@ -1290,7 +1294,7 @@
   function updateTeam3Pts() {
     team_3pts = {};
     let year_data_3 = cloneDeep(threepointData);
-    for (let tm of team_line) {
+    for (let tm of team_3pt_line) {
       counter = 0;
       team_3pts[tm] = [];
       for (let yer of year_data_3) {
@@ -1358,6 +1362,63 @@
         .attr("stroke", (d, i) => colors[i])
         .attr("stroke-width", 2.5);
       u.exit().remove();
+    }
+  }
+S: console.log(team_3pt_line);
+  function update3ptLine(dataArray) {
+    if (team_3pt_line.length != 0) {
+      u3 = line3.selectAll(".liness2").data(Object.values(team_3pts));
+
+      u3.enter()
+        .append("path")
+        .attr("class", "liness2")
+        .merge(u3)
+        .transition()
+        .duration(1000)
+        .attr(
+          "d",
+          d3
+            .line()
+            .x(function (d) {
+              return xLine(d.year);
+            })
+            .y(function (d) {
+              return yLine(d.pts);
+            })
+            .curve(d3.curveBasis),
+        )
+        .attr("fill", "none")
+        .attr("stroke", (d, i) => colors[i])
+        .attr("stroke-width", 2.5);
+      u3.exit().remove();
+    } else {
+      renderYearAvg3pt();
+    }
+
+    function renderYearAvg3pt() {
+      u3 = line3.selectAll(".line2").data([year_three_avg]);
+      u3.enter()
+        .append("path")
+        .attr("class", "line2")
+        .merge(u)
+        .transition()
+        .duration(1000)
+        .attr(
+          "d",
+          d3
+            .line()
+            .x(function (d) {
+              return xLine(d.year);
+            })
+            .y(function (d) {
+              return yLine(d.avg);
+            })
+            .curve(d3.curveBasis),
+        )
+        .attr("fill", "none")
+        .attr("stroke", (d, i) => colors[i])
+        .attr("stroke-width", 2.5);
+      u3.exit().remove();
     }
   }
 
@@ -1429,10 +1490,32 @@
       .text((d) => d);
 
     select.on("change", function () {
-      const options = this.selectedOptions;
+      let options = this.selectedOptions;
       team_line = Array.from(options).map((option) => option.value);
       updateTeamPts();
       updateLine(team_pts);
+    });
+  }
+
+  function checkbox3pt(data) {
+    select2 = d3
+      .select("#body3pt")
+      .append("select")
+      .attr("multiple", true)
+      .attr("size", 8);
+    select2
+      .selectAll("option")
+      .data(data)
+      .enter()
+      .append("option")
+      .attr("value", (d) => d)
+      .text((d) => d);
+
+    select2.on("change", function () {
+      let options2 = this.selectedOptions;
+      team_3pt_line = Array.from(options2).map((option2) => option2.value);
+      updateTeam3Pts();
+      update3ptLine(team_3pts);
     });
   }
 
@@ -1467,7 +1550,7 @@
     line3.append("g").call(d3.axisLeft(yLine));
 
     line3
-      .selectAll("lines")
+      .selectAll("line2")
       .data([year_three_avg])
       .enter()
       .append("path")
@@ -1483,7 +1566,7 @@
           })
           .curve(d3.curveBasis),
       )
-      .attr("class", "line")
+      .attr("class", "liness2")
       .attr("fill", "none")
       .attr("stroke", "red")
       .attr("stroke-width", 2.5);
@@ -1650,6 +1733,7 @@
   <div class="paragraph_annotation">
     <p>PARAGRAPH ANNOTATION PLACEHOLDER</p>
   </div>
+  <div id="body3pt"><h2>Select teams to view:</h2><p>You can select multiple teams by either click and drag or by holding command/ctrl and clicking on the desired teams</p></div>
   <div id="linechart2" class="chart_class"><h2>Three Points Line</h2></div>
   <div class="paragraph_annotation">
     <p>PARAGRAPH ANNOTATION PLACEHOLDER</p>
