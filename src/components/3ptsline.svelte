@@ -257,8 +257,10 @@
         .attr("stroke", (d, i) => colors[i])
         .attr("stroke-width", 2.5);
       u3.exit().remove();
+      updateLegend(team_3pt_line);
     } else {
       renderYearAvg3pt();
+      originalLegend();
     }
 
     function renderYearAvg3pt() {
@@ -387,20 +389,116 @@ function checkbox3pt(data) {
       .attr("stroke", "red")
       .attr("stroke-width", 2.5);
   }
+  function updateLegend(teams) {
+    // Remove existing legend items
+    d3.select("#legend2").selectAll("*").remove();
+    if (teams.length != 0) {
+      let legendItems = d3
+        .select("#legend2")
+        .selectAll("div")
+        .data(teams)
+        .enter()
+        .append("div")
+        .attr("class", "legend-item");
+
+      // Add colored rectangles (squares) to represent each team
+      legendItems
+        .append("div")
+        .attr("class", "legend-color")
+        .style("background-color", (d, i) => colors[i]) // Assign colors based on the colors array
+        .style("width", "20px") // Adjust the width of the rectangle as needed
+        .style("height", "20px"); // Assign colors based on the colors array
+
+      // Add text for each team
+      legendItems
+        .append("div")
+        .text((d) => d)
+        .attr("class", "legend-text")
+        .style("margin-right", "20px");
+    }
+  }
+
+  function originalLegend() {
+    d3.select("#legend2").selectAll("*").remove();
+    if (teams.length != 0) {
+      let legendItem = d3.select("#legend").attr("class", "legend-item");
+
+      // Add colored rectangles (squares) to represent each team
+      legendItem
+        .append("div")
+        .attr("class", "legend-color")
+        .style("background-color", colors[0]) // Assign colors based on the colors array
+        .style("width", "20px") // Adjust the width of the rectangle as needed
+        .style("height", "20px"); // Assign colors based on the colors array
+
+      // Add text for each team
+      legendItem
+        .append("div")
+        .text("League Average")
+        .attr("class", "legend-text")
+        .style("margin-right", "20px");
+    }
+  }
 </script>
 
 
 
 <main>
-    <div id="body3pt"><h2>Select teams to view:</h2><p>You can select multiple teams by either click and drag or by holding command/ctrl and clicking on the desired teams</p></div>
-    <div id="linechart2" class="chart_class"><h2>Three Points Line</h2></div>
-    <div class="paragraph_annotation">
-      <p>PARAGRAPH ANNOTATION PLACEHOLDER</p>
-    </div>
+  <div id="highlightable-box" class="highlightable-box">
+    <!-- Highlightable elements (team names) will be rendered here -->
+  </div>
+  <div id="body3pt">
+    <h2>Select teams to view:</h2>
+    <p>
+      You can select multiple teams by either click and drag or by holding
+      command/ctrl and clicking on the desired teams
+    </p>
+    <div id="legend2" class="legend-container"></div>
+  </div>
+  <div id="linechart2" class="chart_class">
+    <h2>Average Three Point Attempts Per Game Over the Years</h2>
+  </div>
+  <div id="linechartpace" class="chart_class">
+    <h2>NBA Average Pace Over the Years</h2>
+  </div>
+  <h2 id="demo_title" class="centered_title">Demo Video</h2>
+  <div id="vid">
+    <iframe
+      width="560"
+      height="315"
+      src="https://www.youtube.com/embed/lzmLslPAlSw?si=bErPLGV8iQ0rVRRI"
+      title="YouTube video player"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen
+    ></iframe>
+  </div>
 </main>
 
 
 <style>
+  #legend {
+    display: flex; /* Display legend items in a flex container */
+    flex-wrap: wrap; /* Allow legend items to wrap to next line if needed */
+  }
+  .legend-container {
+    display: flex; /* Display legend items in a flex container */
+    flex-wrap: wrap; /* Allow legend items to wrap to next line if needed */
+  }
+
+  .legend-item {
+    margin-right: 20px; /* Adjust margin between legend items */
+  }
+
+  .legend-color {
+    display: inline-block; /* Display colored rectangles inline */
+    margin-right: 5px; /* Adjust margin between colored rectangles and text */
+  }
+
+  .highlightable-box, #body, #body3pt, #demo_title, iframe {
+    margin-left: 600px;
+    margin-right: -400px;
+  }
     #overlay {
       font-size: 0.9em;
       /* position: absolute; */
@@ -421,7 +519,11 @@ function checkbox3pt(data) {
       margin: 0;
       cursor: pointer;
     }
-  
+    #vid {
+    display: flex;
+    justify-content: right;
+    align-items: center;
+  }
     label {
       font-size: 1.5em;
       font-family: sans-serif;
@@ -464,5 +566,70 @@ function checkbox3pt(data) {
       text-align: justify;
       font-family: Arial, Helvetica, sans-serif;
     }
+    .highlightable-box,
+  #body,
+  #body3pt,
+  #demo_title,
+  iframe {
+    margin-left: 40px;
+    margin-right: 40px;
+  }
+  .container {
+    display: flex;
+    align-items: center; /* Vertically center items */
+    margin-bottom: 45px;
+    margin-top: 25px;
+  }
+
+  .text_test {
+    margin-left: 30px; /* Adjust spacing between image and text */
+    margin-right: 30px;
+    width: 400px;
+    font-size: 18px;
+    text-align: justify;
+  }
+
+  #first_hook,
+  #second_hook {
+    height: 250px;
+  }
+
+  #linechart,
+  #linechart2 {
+    margin-top: -100px;
+    margin-bottom: -50px;
+  }
+  .centered_title {
+    text-align: center;
+  }
+  iframe {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  #vid {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  #legend {
+    display: flex; /* Display legend items in a flex container */
+    flex-wrap: wrap; /* Allow legend items to wrap to next line if needed */
+  }
+  .legend-container {
+    display: flex; /* Display legend items in a flex container */
+    flex-wrap: wrap; /* Allow legend items to wrap to next line if needed */
+  }
+
+  .legend-item {
+    margin-right: 20px; /* Adjust margin between legend items */
+  }
+
+  .legend-color {
+    display: inline-block; /* Display colored rectangles inline */
+    margin-right: 5px; /* Adjust margin between colored rectangles and text */
+  }
+
+
   </style>
   

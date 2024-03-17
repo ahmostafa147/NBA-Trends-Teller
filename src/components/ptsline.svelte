@@ -191,7 +191,7 @@
       checkbox(options);
     });
   });
-function takeAverage(y, d) {
+  function takeAverage(y, d) {
     var vals = Object.values(d)
       .map((pts) => parseFloat(pts))
       .filter((value) => value > 0);
@@ -202,7 +202,7 @@ function takeAverage(y, d) {
     let average = sum / vals.length;
     return parseFloat(average.toFixed(1));
   }
-function updateTeamPts() {
+  function updateTeamPts() {
     team_pts = {};
     let year_data = cloneDeep(data);
     for (let tm of team_line) {
@@ -217,7 +217,7 @@ function updateTeamPts() {
       }
     }
   }
-function renderLinePlot(dataArray) {
+  function renderLinePlot(dataArray) {
     const margin = { top: 40, right: 120, bottom: 150, left: 60 };
     const width = 1400 - margin.left - margin.right;
     height = 600 - margin.top - margin.bottom;
@@ -295,8 +295,10 @@ function renderLinePlot(dataArray) {
         .attr("stroke", (d, i) => colors[i])
         .attr("stroke-width", 2.5);
       u.exit().remove();
+      updateLegend(team_line);
     } else {
       renderYearAvg();
+      originalLegend();
     }
 
     function renderYearAvg() {
@@ -347,80 +349,236 @@ function renderLinePlot(dataArray) {
       updateLine(team_pts);
     });
   }
-</script>
-<main>
-    <div id="highlightable-box" class="highlightable-box">
-        <!-- Highlightable elements (team names) will be rendered here -->
-      </div>
-      <div id="body"><h2>Select teams to view:</h2><p>You can select multiple teams by either click and drag or by holding command/ctrl and clicking on the desired teams</p></div>
-      <div id="linechart" class="chart_class"><h2>Points Line</h2></div>
-      <div class="paragraph_annotation">
-        <p>PARAGRAPH ANNOTATION PLACEHOLDER</p>
-      </div>
-</main>
 
+  function updateLegend(teams) {
+    // Remove existing legend items
+    d3.select("#legend").selectAll("*").remove();
+    if (teams.length != 0) {
+      let legendItems = d3
+        .select("#legend")
+        .selectAll("div")
+        .data(teams)
+        .enter()
+        .append("div")
+        .attr("class", "legend-item");
+
+      // Add colored rectangles (squares) to represent each team
+      legendItems
+        .append("div")
+        .attr("class", "legend-color")
+        .style("background-color", (d, i) => colors[i]) // Assign colors based on the colors array
+        .style("width", "20px") // Adjust the width of the rectangle as needed
+        .style("height", "20px"); // Assign colors based on the colors array
+
+      // Add text for each team
+      legendItems
+        .append("div")
+        .text((d) => d)
+        .attr("class", "legend-text")
+        .style("margin-right", "20px");
+    }
+  }
+
+  function originalLegend() {
+    d3.select("#legend").selectAll("*").remove();
+    if (teams.length != 0) {
+      let legendItem = d3.select("#legend").attr("class", "legend-item");
+
+      // Add colored rectangles (squares) to represent each team
+      legendItem
+        .append("div")
+        .attr("class", "legend-color")
+        .style("background-color", colors[0]) // Assign colors based on the colors array
+        .style("width", "20px") // Adjust the width of the rectangle as needed
+        .style("height", "20px"); // Assign colors based on the colors array
+
+      // Add text for each team
+      legendItem
+        .append("div")
+        .text("League Average")
+        .attr("class", "legend-text")
+        .style("margin-right", "20px");
+    }
+  }
+</script>
+
+<main>
+  <div id="highlightable-box" class="highlightable-box">
+    <!-- Highlightable elements (team names) will be rendered here -->
+  </div>
+  <div id="body">
+    <h2>Select teams to view:</h2>
+    <p>
+      You can select multiple teams by either click and drag or by holding
+      command/ctrl and clicking on the desired teams
+    </p>
+    <div id="legend" class="legend-container"></div>
+  </div>
+  <div id="linechart" class="chart_class">
+    <h2>Average Points Per Game over the Years</h2>
+  </div>
+
+  <div class="highlightable-box">
+    <h2 class="centered_title">Conclusion</h2>
+  </div>
+  <div class="paragraph_annotation">
+    <p>
+      NBA teams are scoring more and more points recently AND many fans are
+      worried. BUT these fans have most likely only been watching since 90s and
+      2000s and have therefore only witnessed an increase in scoring in their
+      lifetimes. THEREFORE the current levels of scoring and the state of the
+      game are not necessarily things to be worried about as we have seen
+      similar levels of scoring in the past.
+    </p>
+  </div>
+  <div class="highlightable-box">
+    <h2 class="centered_title">
+      Possible Explanation for Recent Scoring Spike
+    </h2>
+  </div>
+  <div class="paragraph_annotation">
+    <p>
+      There has been a recent explosion in the usage of the three point shot,
+      with the average number of three point attempts going from 18 in 2011 to
+      nearly doubling in the 2021 with 35.2. With more three pointers being
+      attempted and teams greatly valuing high percentage three point shooters,
+      expected scoring totals greatly increase. This is coupled with a rebound
+      in the pace of play from the molasses marred speed of the 90s and 2000s to
+      the more uptempo style of the 70s and 80s. For context, the slowest paced
+      team this past season was still faster than the fastest team in 2001. The
+      combination of these two phenomena is a possible cause for recent uptick.
+    </p>
+    <p>Below are two graphs that help visualize the phenomena.</p>
+  </div>
+</main>
 <style>
-    #overlay {
-      font-size: 0.9em;
-      /* position: absolute; */
-      margin-left: auto; 
-      margin-right: 0;
-      min-width: 250px;
-      width: 15%;
-      top: 180px;
-      right: 10px;
-      padding: 10px;
-      z-index: 3;
-    }
-  
-    input {
-      display: inline-block;
-      width: 100%;
-      position: relative;
-      margin: 0;
-      cursor: pointer;
-    }
-  
-    label {
-      font-size: 1.5em;
-      font-family: sans-serif;
-      font-weight: bold;
-    }
-  
-    .chart_class, #title {
-      background-color: antiquewhite;
-      margin: auto;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-    }
-  
-    h2 {
-      font-size: 24px;
-      font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
-    }
-  
-    h1 {
-      font-size: 36px;
-      font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
-    }
-  
-    img {
-      position: absolute;
-      /* margin-right: auto; 
-      margin-left: 0; */
-      top: 0;
-      left: 0;
-      height: 20%;
-    }
-  
-    #text, .paragraph_annotation {
-      font-size: 18px;
-      margin-left: 40px;
-      margin-right: 40px;
-      text-align: justify;
-      font-family: Arial, Helvetica, sans-serif;
-    }
-  </style>
+  #overlay {
+    font-size: 0.9em;
+    /* position: absolute; */
+    margin-left: auto;
+    margin-right: 0;
+    min-width: 250px;
+    width: 15%;
+    top: 180px;
+    right: 10px;
+    padding: 10px;
+    z-index: 3;
+  }
+
+  input {
+    display: inline-block;
+    width: 100%;
+    position: relative;
+    margin: 0;
+    cursor: pointer;
+  }
+
+  label {
+    font-size: 1.5em;
+    font-family: sans-serif;
+    font-weight: bold;
+  }
+
+  .chart_class,
+  #title {
+    background-color: antiquewhite;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+  }
+
+  h2 {
+    font-size: 24px;
+    font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+  }
+
+  h1 {
+    font-size: 36px;
+    font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+  }
+
+  .NBA_img {
+    position: absolute;
+    /* margin-right: auto; 
+    margin-left: 0; */
+    top: 0;
+    left: 0;
+    height: 20%;
+  }
+
+  #text,
+  .paragraph_annotation {
+    font-size: 18px;
+    margin-left: 40px;
+    margin-right: 40px;
+    text-align: justify;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  .highlightable-box,
+  #body,
+  #body3pt,
+  #demo_title,
+  iframe {
+    margin-left: 40px;
+    margin-right: 40px;
+  }
+  .container {
+    display: flex;
+    align-items: center; /* Vertically center items */
+    margin-bottom: 45px;
+    margin-top: 25px;
+  }
+
+  .text_test {
+    margin-left: 30px; /* Adjust spacing between image and text */
+    margin-right: 30px;
+    width: 400px;
+    font-size: 18px;
+    text-align: justify;
+  }
+
+  #first_hook,
+  #second_hook {
+    height: 250px;
+  }
+
+  #linechart,
+  #linechart2 {
+    margin-top: -100px;
+    margin-bottom: -50px;
+  }
+  .centered_title {
+    text-align: center;
+  }
+  iframe {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  #vid {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  #legend {
+    display: flex; /* Display legend items in a flex container */
+    flex-wrap: wrap; /* Allow legend items to wrap to next line if needed */
+  }
+  .legend-container {
+    display: flex; /* Display legend items in a flex container */
+    flex-wrap: wrap; /* Allow legend items to wrap to next line if needed */
+  }
+
+  .legend-item {
+    margin-right: 20px; /* Adjust margin between legend items */
+  }
+
+  .legend-color {
+    display: inline-block; /* Display colored rectangles inline */
+    margin-right: 5px; /* Adjust margin between colored rectangles and text */
+  }
+</style>

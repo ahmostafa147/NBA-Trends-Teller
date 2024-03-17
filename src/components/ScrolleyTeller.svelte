@@ -9,39 +9,47 @@
   import Ptsline from "../components/ptsline.svelte";
   import Pts3line from "../components/3ptsline.svelte";
   import Pace from "../components/pace.svelte";
+  import Pic from '../components/pic.svelte'
   let count, index, offset, progress;
   $: console.log(index)
   let isVisible1 = false;
+  let isVisible9 = false;
 
   $: if (index === 0) {
+    isVisible9 = true;
+  } else {
+    isVisible9 = false;
+  }
+  
+  $: if (index === 1) {
     isVisible1 = true;
   } else {
     isVisible1 = false;
   }
   let isVisible2 = false;
 
-  $: if (index === 1) {
+  $: if (index === 2) {
     isVisible2 = true;
   } else {
     isVisible2 = false;
   }
   let isVisible3 = false;
 
-  $: if (index === 2) {
+  $: if (index === 3) {
     isVisible3 = true;
   } else {
     isVisible3 = false;
   }
   let isVisible4 = false;
 
-  $: if (index === 3) {
+  $: if (index === 4) {
     isVisible4 = true;
   } else {
     isVisible4 = false;
   }
   let isVisible5 = false;
 
-  $: if (index === 4) {
+  $: if (index === 5) {
     isVisible5 = true;
   } else {
     isVisible5 = false;
@@ -49,7 +57,7 @@
 
   let isVisible6 = false;
 
-  $: if (index === 5) {
+  $: if (index === 7) {
     isVisible6 = true;
   } else {
     isVisible6 = false;
@@ -57,7 +65,7 @@
 
   let isVisible7 = false;
 
-  $: if (index === 6) {
+  $: if (index >= 8) {
     isVisible7 = true;
   } else {
     isVisible7 = false;
@@ -65,7 +73,7 @@
 
   let isVisible8 = false;
 
-  $: if (index === 7) {
+  $: if (index >= 9) {
     isVisible8 = true;
   } else {
     isVisible8 = false;
@@ -82,20 +90,13 @@
   bind:progress
 >
   <div class="background" slot="background" id="background">
-    <div class="progress-bars">
-      <p>current section: <strong>{index + 1}/{count}</strong></p>
-      <progress value={count ? (index + 1) / count : 0} />
-
-      <p>offset in current section</p>
-      <progress value={offset || 0} />
-
-      <p>total progress</p>
-      <progress value={progress || 0} />
-    </div>
   </div>
   <div class="foreground" slot="foreground">
     <!-- <App {index}/> -->
-    <section style="height:150vh">
+    <section style="height:85vh">
+      <div id="please9" class:visible={isVisible9}><Pic /></div>
+    </section>
+    <section >
       <div id="please2" class:visible={isVisible1}><Bar2 /></div>
     </section>
     <section>
@@ -110,7 +111,8 @@
     <section>
       <div id="please1" class:visible={isVisible5}><Bar1 /></div>
     </section>
-    <section>
+    <section style="height:15vh"></section>
+    <section style="height:155vh">
       <div id="please6" class:visible={isVisible6}><Ptsline /></div>
     </section>
     <section>
@@ -269,7 +271,7 @@
   }
 
   section {
-    height: 100vh;
+    height: 120vh;
     color: white;
     text-align: center;
     max-width: 7500px; /* adjust at will */

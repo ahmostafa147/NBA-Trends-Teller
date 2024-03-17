@@ -527,7 +527,27 @@
         </div>
     </div>
     <div class="paragraph_annotation">
-        <p>PARAGRAPH ANNOTATION PLACEHOLDER</p>
+        <p class="paragraph">While there may be some reason for worry, the widespread panic and
+            announcements of the league’s downfall are greatly overblown. While
+            scoring has increased drastically since the early 2000s, the current
+            levels of unscoring are not completely unprecedented. Many years
+            throughout the 70s and 80s, the league average would be north of 110
+            points per game and therefore in the same ballpark as the current
+            statistics. We believe that there is so much panic due to the demographic
+            of NBA fans. Majority of NBA fans nowadays grew up either in the 90s or
+            2000s with a childhood highlighted by either Jordan’s or Bryant’s
+            dominance. These fans are conditioned to the slower, more physical
+            playstyle and have only witnessed the NBA become “softer” and scoring
+            increase in their lifetimes. However, if you consider the entirety of
+            modern basketball, the 90s and 2000s are a valley in scoring and it is
+            very possible that scoring follows a oscillating, sinusodial pattern and
+            we are currently just at a peak. The one reservation we will make is that
+            the rate scoring has increased in the last decade is unprecedented. In
+            less than the last decade, the league average has increased from 100 to
+            over 114 points per game. While the current average pace has not exceeded
+            that of the run-and-gun Laker’s era in the 80s, we could be getting there
+            soon and coupled with the proliferation of the three point shot, a truly
+            unprecedented level of scoring could be on the horizon.</p>
     </div>
 </main>
 

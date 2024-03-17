@@ -317,6 +317,76 @@
                 "Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif",
             )
             .style("font-size", "20px");
+            const lineData1 = [
+      { x: 0, y: 104 },
+      { x: 1220, y: 104 },
+    ];
+
+    const lineFunction = d3
+      .line()
+      .x((d) => d.x)
+      .y((d) => d.y);
+
+    svg5
+      .append("path")
+      .attr("d", lineFunction(lineData1))
+      .attr("stroke", "red")
+      .attr("stroke-width", 2)
+      .attr("fill", "none");
+
+    const lineData2 = [
+      { x: 805, y: 104 },
+      { x: 860, y: 40 },
+    ];
+
+    svg5
+      .append("path")
+      .attr("d", lineFunction(lineData2))
+      .attr("stroke", "gray")
+      .attr("stroke-width", 2)
+      .attr("fill", "none");
+
+    const lineData3 = [
+      { x: 860, y: 40 },
+      { x: 1260, y: 40 },
+    ];
+
+    svg5
+      .append("path")
+      .attr("d", lineFunction(lineData3))
+      .attr("stroke", "gray")
+      .attr("stroke-width", 2)
+      .attr("fill", "none");
+
+    svg5
+      .append("text")
+      .attr("x", 900)
+      .attr("y", 158)
+      .attr("font-size", "14px")
+      .attr("fill", "black")
+      .text("")
+      .style("font-size", "20px");
+            const foreignObject = svg5
+      .append("foreignObject")
+      .attr("x", 860)
+      .attr("y", -35)
+      .attr("width", 400)
+      .attr("height", 100);
+
+    const div = foreignObject
+      .append("xhtml:div")
+      .style("font-size", "14px")
+      .style("color", "black")
+      .style("text-align", "justify");
+
+    div
+      .html(
+        "In the most recently completed NBA season, teams averaged 114.7 points \
+        per game, with the game nowadays revolving around the three point shot \
+        and efficient play in general. This playstyle is pioneered by players \
+        like Stephen Curry, LeBron James, and Kevin Durant.",
+      )
+      .style("font-size", "14px");
     }
 
     function updateTooltipPosition(event, d, svg) {
@@ -362,7 +432,17 @@
         </h2>
       </div>
       <div class="paragraph_annotation">
-        <p>PARAGRAPH ANNOTATION PLACEHOLDER</p>
+        <p>The modern game is dominated by three point shooting and playbooks
+            corroborated by advanced analytics. The skill level has reached an
+            all-time high in the league as it has become more international than ever
+            before, with the last five MVP awards going to foreign born players. In
+            the most recent season, the league average was 114.7 points per game, a
+            value not seen since the 1960s. Offensive superstars like Steph Curry,
+            Lebron James, Nikola Jokic, and Kevin Durant dominate the headlines and
+            are the standard of emulation for all teams around the league.</p>
+            <p>
+                Below is an interactive, playable version of the static bar graphs above.
+              </p>
       </div>
 </main>
 

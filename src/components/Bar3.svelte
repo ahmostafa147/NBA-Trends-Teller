@@ -363,7 +363,7 @@
     const foreignObject = svg2
       .append("foreignObject")
       .attr("x", 890)
-      .attr("y", 20)
+      .attr("y", 15)
       .attr("width", 350)
       .attr("height", 100);
 
@@ -380,6 +380,29 @@
             stars like Kareem Abdul-Jabbar, Magic Johnson, and Larry Bird.",
       )
       .style("font-size", "14px");
+     
+    const foreignObject2 = svg2
+      .append("foreignObject")
+      .attr("x", 1044)
+      .attr("y", 90)
+      .attr("width", 350)
+      .attr("height", 500);
+
+    const div2 = foreignObject2
+      .append("xhtml:div")
+      .style("font-size", "14px")
+      .style("color", "black")
+      .style("text-align", "justify");
+
+    div2
+      .append("img")
+      .attr(
+        "src",
+        "https://www.usatoday.com/gcdn/authoring/2019/05/15/USAT/af4479ee-4fb3-427d-8b0a-13034cf41d25-XXX_IMG_XXX_IMG_XXX_LARRY_BI_1_1_USIPMVCK.JPG",
+      )
+      // .attr("width", 500); // Adjust the width as needed
+      .attr("height", 310);
+  
   }
   function updateTooltipPosition(event, d, svg) {
         tooltip = svg.select(".tooltip");
@@ -425,7 +448,13 @@
         </h2>
       </div>
       <div class="paragraph_annotation">
-        <p>PARAGRAPH ANNOTATION PLACEHOLDER</p>
+        <p>We now move forward to 1980. The NBA is thriving in this era, with the
+          Showtime Lakers and the Magic versus Bird rivalry captivating fans. This
+          year, the league had a scoring average of 108.1 points per game, which was
+          pretty typical of the 70s and 80s. Trail blazed by the Showtime Lakers,
+          teams were playing at an unprecedented pace. The three-point line was also
+          introduced in 1979, allowing another avenue of elevated scoring although
+          teams were not quick to prioritize it.</p>
       </div>
 </main>
 <style>

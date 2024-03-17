@@ -361,8 +361,51 @@
             .attr("y", 158)
             .attr("font-size", "14px")
             .attr("fill", "black")
-            .text("Annotation placeholder")
+
             .style("font-size", "20px");
+            const foreignObject = svg3
+      .append("foreignObject")
+      .attr("x", 900)
+      .attr("y", 70)
+      .attr("width", 350)
+      .attr("height", 100);
+
+    const div = foreignObject
+      .append("xhtml:div")
+      .style("font-size", "14px")
+      .style("color", "black")
+      .style("text-align", "justify");
+
+    div
+      .html(
+        "The lowpoint in scoring in the last thirty years occurred in the 1998 \
+        season, where the league averaged 91.6 points per game. This era of \
+        basketball was characterized by slow, physical isolation basektball \
+        from the likes of players like Michael Jordan, Kobe Bryant, and Tim Duncan.",
+      )
+      .style("font-size", "14px");
+
+    const foreignObject2 = svg3
+      .append("foreignObject")
+      .attr("x", 565)
+      .attr("y", -37)
+      .attr("width", 350)
+      .attr("height", 500);
+
+    const div2 = foreignObject2
+      .append("xhtml:div")
+      .style("font-size", "14px")
+      .style("color", "black")
+      .style("text-align", "justify");
+
+    div2
+      .append("img")
+      .attr(
+        "src",
+        "https://ew.com/thmb/XoWCPkHqWW_fgYYutiw9ugmthbw=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/kobe-bryant-0d4dffb9eac446ec8aa5a5536f6ca1ff.jpg",
+      )
+      // .attr("width", 500); // Adjust the width as needed
+      .attr("height", 200);
     }
 
     function updateTooltipPosition(event, d, svg) {
@@ -408,7 +451,14 @@
     </h2>
   </div>
   <div class="paragraph_annotation">
-    <p>PARAGRAPH ANNOTATION PLACEHOLDER</p>
+    <p>We are now in 1998, and the turn of the century is characterized by much
+        slower and physical play. During the 1998 season, the league averaged 91.6
+        points per game, the lowest in the last thirty years and since the 1950s,
+        when professional basketball was still in its infancy. Teams leaned
+        heavily into isolation plays for their star players like Michael Jordan
+        and Kobe Bryant, as the more physical defense aided by lenient foul
+        calling made offense hard to come by. This style of play would persist
+        well into the 2000s.</p>
   </div>
 </main>
 

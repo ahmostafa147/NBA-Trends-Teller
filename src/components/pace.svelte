@@ -234,10 +234,7 @@ function renderLinePlotPace() {
 
 <main>
 
-    <div id="linechartpace" class="chart_class"><h2>Pace Line</h2></div>
-  <div class="paragraph_annotation">
-    <p>PARAGRAPH ANNOTATION PLACEHOLDER</p>
-  </div>
+ 
 </main>
 
 <style>

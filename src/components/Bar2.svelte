@@ -462,23 +462,6 @@
 </script>
 
 <main>
-  <div id="title">
-    <h1>
-      Is Defense Dying in the NBA?
-      <!-- <img
-        src="https://images.ctfassets.net/h8q6lxmb5akt/5qXnOINbPrHKXWa42m6NOa/421ab176b501f5bdae71290a8002545c/nba-logo_2x.png"
-        ,
-        alt="NBA"
-      /> -->
-    </h1>
-    <div id="hook">
-      <p>HOOK TEXT PLACEHOLDER</p>
-      <p>HOOK TEXT PLACEHOLDER</p>
-      <p>HOOK TEXT PLACEHOLDER</p>
-      <p>HOOK TEXT PLACEHOLDER</p>
-      <p>HOOK TEXT PLACEHOLDER</p>
-    </div>
-  </div>
   <div id="chart2" class="chart_class">
     <h2 style="text-align: left;">
       NBA Teams Difference in Average Points per Game in 1953 From All Time
@@ -486,7 +469,12 @@
     </h2>
   </div>
   <div class="paragraph_annotation">
-    <p>PARAGRAPH ANNOTATION PLACEHOLDER</p>
+    <p>Let’s start our analysis of the history of scoring in the NBA in 1953.
+      This season, the Milwaukee Hawks (now Atlanta Hawks) averaged a measly 70
+      points per game. There were only 8 teams in the league and basketball
+      during this era barely resembles modern basketball. For the rest of our
+      analysis, we will be comparing all other teams and years relative to this
+      lowpoint in scoring, which will be reflected in the axes values.</p>
   </div>
 </main>
 
@@ -550,10 +538,11 @@
 
   #text,
   .paragraph_annotation {
-    font-size: 18px;
+    font-size: 20px;
     margin-left: 40px;
     margin-right: 40px;
-    text-align: justify;
+    text-align: center;
+    height: 10%;
     font-family: Arial, Helvetica, sans-serif;
   }
 </style>

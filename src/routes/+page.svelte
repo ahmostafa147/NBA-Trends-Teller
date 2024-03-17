@@ -9,6 +9,7 @@
     import Pts3line from '../components/3ptsline.svelte'
     import Pace from '../components/pace.svelte'
     import Scroller from '../components/ScrolleyTeller.svelte'
+    import Pic from '../components/pic.svelte'
 
 
 </script>
@@ -24,4 +25,5 @@
 <!-- <Ptsline /> -->
 <!-- <Pts3line /> -->
 <!-- <Pace /> -->
+<!-- <Pic /> -->
 
