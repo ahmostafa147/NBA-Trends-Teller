@@ -11,6 +11,7 @@
     "@sveltejs/adapter-auto": "^3.0.0",
     "@sveltejs/adapter-static": "^3.0.1",
     "@sveltejs/kit": "^2.0.0",
+    "@sveltejs/svelte-scroller": "^2.0.7",
     "@sveltejs/vite-plugin-svelte": "^3.0.0",
     "svelte": "^4.2.7",
     "vite": "^5.0.3"
@@ -19,6 +20,7 @@
   "dependencies": {
     "d3": "^7.8.5",
     "lodash": "^4.17.21",
-    "scrolly-teller": "^0.0.18"
+    "scrolly-teller": "^0.0.18",
+    "svelte-scroller": "^1.2.2"
   }
 }
