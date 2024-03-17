@@ -174,7 +174,7 @@ import { onMount } from "svelte";
   };
 
   onMount(() => {
-    d3.csv("src/NBA_PACE.csv").then((csvdata) => {
+    d3.csv("NBA_PACE.csv").then((csvdata) => {
       paceData = csvdata;
       renderLinePlotPace();
     });

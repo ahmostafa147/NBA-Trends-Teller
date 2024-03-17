@@ -174,10 +174,10 @@
   };
 
   onMount(() => {
-    d3.csv("src/NBA_3PA.csv").then((csvdata) => {
+    d3.csv("NBA_3PA.csv").then((csvdata) => {
       threepointData = csvdata;
     })
-    d3.csv("src/DSC106_NBA.csv").then((csvData) => {
+    d3.csv("DSC106_NBA.csv").then((csvData) => {
       data = csvData;
       let tempData = cloneDeep(data);
       for (let yr_data of tempData) {

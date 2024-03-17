@@ -176,7 +176,7 @@
     };
 
     onMount(() => {
-        d3.csv("src/DSC106_NBA.csv").then((csvData) => {
+        d3.csv("DSC106_NBA.csv").then((csvData) => {
             data = csvData;
             renderBarChart4(1998);
         });
