@@ -268,6 +268,30 @@
       .attr("fill", "none")
       .attr("stroke", "red")
       .attr("stroke-width", 2.5);
+      line
+      .append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 0 - margin.left) // Adjust the position as needed
+      .attr("x", 0 - height / 2)
+      .attr("dy", "1em")
+      .style("text-anchor", "middle")
+      .text("Average Points Per Game")
+      .style(
+        "font-family",
+        "Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif",
+      )
+      .style("font-size", "20px");
+
+    line
+      .append("text")
+      .attr("transform", `translate(${width / 2}, ${height + 120})`) // Adjust the position as needed
+      .style("text-anchor", "middle")
+      .text("Year")
+      .style(
+        "font-family",
+        "Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif",
+      )
+      .style("font-size", "20px");
   }
   function updateLine(dataArray) {
     if (team_line.length != 0) {

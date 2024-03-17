@@ -1,5 +1,5 @@
 <script>
-      import { onMount } from "svelte";
+  import { onMount } from "svelte";
   import * as d3 from "d3";
   import cloneDeep from "lodash/cloneDeep";
   let data = [];
@@ -176,7 +176,7 @@
   onMount(() => {
     d3.csv("NBA_3PA.csv").then((csvdata) => {
       threepointData = csvdata;
-    })
+    });
     d3.csv("DSC106_NBA.csv").then((csvData) => {
       data = csvData;
       let tempData = cloneDeep(data);
@@ -190,7 +190,7 @@
         counter++;
       }
       let threeData = cloneDeep(threepointData);
-      counter=0
+      counter = 0;
       for (let yr_data of threeData) {
         let toAdd3 = {};
         toAdd3["year"] = parseInt(yr_data.Year);
@@ -231,7 +231,7 @@
       }
     }
   }
-    function update3ptLine(dataArray) {
+  function update3ptLine(dataArray) {
     if (team_3pt_line.length != 0) {
       u3 = line3.selectAll(".liness2").data(Object.values(team_3pts));
 
@@ -286,10 +286,11 @@
         .attr("fill", "none")
         .attr("stroke", (d, i) => colors[i])
         .attr("stroke-width", 2.5);
+
       u3.exit().remove();
     }
   }
-function checkbox3pt(data) {
+  function checkbox3pt(data) {
     select2 = d3
       .select("#body3pt")
       .append("select")
@@ -321,9 +322,9 @@ function checkbox3pt(data) {
     let minimumY = 0;
     let maximumY = Math.max(...year_avg.map((obj) => obj["avg"])) + 20;
 
-    xLine3 = d3.scaleLinear().domain([minimumX, maximumX]).range([0, width]);
+    xLine3 = d3.scaleLinear().domain([1979, 2022]).range([0, width]);
 
-    yLine3 = d3.scaleLinear().domain([minimumY, maximumY]).range([height, 0]);
+    yLine3 = d3.scaleLinear().domain([0, 40]).range([height, 0]);
 
     line3 = d3
       .select("#linechart2")
@@ -362,6 +363,31 @@ function checkbox3pt(data) {
       .attr("fill", "none")
       .attr("stroke", "red")
       .attr("stroke-width", 2.5);
+
+    line3
+      .append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 0 - margin.left) // Adjust the position as needed
+      .attr("x", 0 - height / 2)
+      .attr("dy", "1em")
+      .style("text-anchor", "middle")
+      .text("Average Three Point Attempts Per Game")
+      .style(
+        "font-family",
+        "Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif",
+      )
+      .style("font-size", "20px");
+
+    line3
+      .append("text")
+      .attr("transform", `translate(${width / 2}, ${height + 120})`) // Adjust the position as needed
+      .style("text-anchor", "middle")
+      .text("Year")
+      .style(
+        "font-family",
+        "Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif",
+      )
+      .style("font-size", "20px");
   }
   function updateLegend(teams) {
     // Remove existing legend items
@@ -415,8 +441,6 @@ function checkbox3pt(data) {
   }
 </script>
 
-
-
 <main>
   <div id="highlightable-box" class="highlightable-box">
     <!-- Highlightable elements (team names) will be rendered here -->
@@ -449,7 +473,6 @@ function checkbox3pt(data) {
   </div>
 </main>
 
-
 <style>
   #legend {
     display: flex; /* Display legend items in a flex container */
@@ -469,78 +492,84 @@ function checkbox3pt(data) {
     margin-right: 5px; /* Adjust margin between colored rectangles and text */
   }
 
-  .highlightable-box, #body, #body3pt, #demo_title, iframe {
+  .highlightable-box,
+  #body,
+  #body3pt,
+  #demo_title,
+  iframe {
     margin-left: 600px;
     margin-right: -400px;
   }
-    #overlay {
-      font-size: 0.9em;
-      /* position: absolute; */
-      margin-left: auto; 
-      margin-right: 0;
-      min-width: 250px;
-      width: 15%;
-      top: 180px;
-      right: 10px;
-      padding: 10px;
-      z-index: 3;
-    }
-  
-    input {
-      display: inline-block;
-      width: 100%;
-      position: relative;
-      margin: 0;
-      cursor: pointer;
-    }
-    #vid {
+  #overlay {
+    font-size: 0.9em;
+    /* position: absolute; */
+    margin-left: auto;
+    margin-right: 0;
+    min-width: 250px;
+    width: 15%;
+    top: 180px;
+    right: 10px;
+    padding: 10px;
+    z-index: 3;
+  }
+
+  input {
+    display: inline-block;
+    width: 100%;
+    position: relative;
+    margin: 0;
+    cursor: pointer;
+  }
+  #vid {
     display: flex;
     justify-content: right;
     align-items: center;
   }
-    label {
-      font-size: 1.5em;
-      font-family: sans-serif;
-      font-weight: bold;
-    }
-  
-    .chart_class, #title {
-      background-color: antiquewhite;
-      margin: auto;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-    }
-  
-    h2 {
-      font-size: 24px;
-      font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
-    }
-  
-    h1 {
-      font-size: 36px;
-      font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
-    }
-  
-    img {
-      position: absolute;
-      /* margin-right: auto; 
+  label {
+    font-size: 1.5em;
+    font-family: sans-serif;
+    font-weight: bold;
+  }
+
+  .chart_class,
+  #title {
+    background-color: antiquewhite;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+  }
+
+  h2 {
+    font-size: 24px;
+    font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+  }
+
+  h1 {
+    font-size: 36px;
+    font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+  }
+
+  img {
+    position: absolute;
+    /* margin-right: auto; 
       margin-left: 0; */
-      top: 0;
-      left: 0;
-      height: 20%;
-    }
-  
-    #text, .paragraph_annotation {
-      font-size: 18px;
-      margin-left: 40px;
-      margin-right: 40px;
-      text-align: justify;
-      font-family: Arial, Helvetica, sans-serif;
-    }
-    .highlightable-box,
+    top: 0;
+    left: 0;
+    height: 20%;
+  }
+
+  #text,
+  .paragraph_annotation {
+    font-size: 18px;
+    margin-left: 40px;
+    margin-right: 40px;
+    text-align: justify;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+  .highlightable-box,
   #body,
   #body3pt,
   #demo_title,
@@ -603,7 +632,4 @@ function checkbox3pt(data) {
     display: inline-block; /* Display colored rectangles inline */
     margin-right: 5px; /* Adjust margin between colored rectangles and text */
   }
-
-
-  </style>
-  
+</style>

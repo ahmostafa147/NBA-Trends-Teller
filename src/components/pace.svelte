@@ -1,5 +1,5 @@
 <script>
-import { onMount } from "svelte";
+  import { onMount } from "svelte";
   import * as d3 from "d3";
   import cloneDeep from "lodash/cloneDeep";
   let data = [];
@@ -180,7 +180,7 @@ import { onMount } from "svelte";
     });
   });
 
-function renderLinePlotPace() {
+  function renderLinePlotPace() {
     const margin = { top: 40, right: 120, bottom: 150, left: 60 };
     const width = 1400 - margin.left - margin.right;
     height = 600 - margin.top - margin.bottom;
@@ -229,77 +229,99 @@ function renderLinePlotPace() {
       .attr("fill", "none")
       .attr("stroke", "red")
       .attr("stroke-width", 2.5);
+    linePace
+      .append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 0 - margin.left) // Adjust the position as needed
+      .attr("x", 0 - height / 2)
+      .attr("dy", "1em")
+      .style("text-anchor", "middle")
+      .text("Average Pace Per Game")
+      .style(
+        "font-family",
+        "Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif",
+      )
+      .style("font-size", "20px");
+
+    linePace
+      .append("text")
+      .attr("transform", `translate(${width / 2}, ${height + 120})`) // Adjust the position as needed
+      .style("text-anchor", "middle")
+      .text("Year")
+      .style(
+        "font-family",
+        "Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif",
+      )
+      .style("font-size", "20px");
   }
 </script>
 
-<main>
-
- 
-</main>
+<main></main>
 
 <style>
-    #overlay {
-      font-size: 0.9em;
-      /* position: absolute; */
-      margin-left: auto; 
-      margin-right: 0;
-      min-width: 250px;
-      width: 15%;
-      top: 180px;
-      right: 10px;
-      padding: 10px;
-      z-index: 3;
-    }
-  
-    input {
-      display: inline-block;
-      width: 100%;
-      position: relative;
-      margin: 0;
-      cursor: pointer;
-    }
-  
-    label {
-      font-size: 1.5em;
-      font-family: sans-serif;
-      font-weight: bold;
-    }
-  
-    .chart_class, #title {
-      background-color: antiquewhite;
-      margin: auto;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-    }
-  
-    h2 {
-      font-size: 24px;
-      font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
-    }
-  
-    h1 {
-      font-size: 36px;
-      font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
-    }
-  
-    img {
-      position: absolute;
-      /* margin-right: auto; 
+  #overlay {
+    font-size: 0.9em;
+    /* position: absolute; */
+    margin-left: auto;
+    margin-right: 0;
+    min-width: 250px;
+    width: 15%;
+    top: 180px;
+    right: 10px;
+    padding: 10px;
+    z-index: 3;
+  }
+
+  input {
+    display: inline-block;
+    width: 100%;
+    position: relative;
+    margin: 0;
+    cursor: pointer;
+  }
+
+  label {
+    font-size: 1.5em;
+    font-family: sans-serif;
+    font-weight: bold;
+  }
+
+  .chart_class,
+  #title {
+    background-color: antiquewhite;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+  }
+
+  h2 {
+    font-size: 24px;
+    font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+  }
+
+  h1 {
+    font-size: 36px;
+    font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+  }
+
+  img {
+    position: absolute;
+    /* margin-right: auto; 
       margin-left: 0; */
-      top: 0;
-      left: 0;
-      height: 20%;
-    }
-  
-    #text, .paragraph_annotation {
-      font-size: 18px;
-      margin-left: 40px;
-      margin-right: 40px;
-      text-align: justify;
-      font-family: Arial, Helvetica, sans-serif;
-    }
-  </style>
-  
+    top: 0;
+    left: 0;
+    height: 20%;
+  }
+
+  #text,
+  .paragraph_annotation {
+    font-size: 18px;
+    margin-left: 40px;
+    margin-right: 40px;
+    text-align: justify;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+</style>

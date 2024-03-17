@@ -356,8 +356,8 @@
       .style("font-size", "20px");
   }
 
-  function updateTooltipPosition(event, d, svg) {
-    tooltip = svg.select(".tooltip");
+  function updateTooltipPosition(event, d, svgg) {
+    tooltip = svgg.select(".tooltip");
     const tooltipWidth = 100;
     const tooltipHeight = 40;
     // const mouseX = event.pageX;
@@ -409,8 +409,7 @@
         return { team: key, score: value - minVal };
       });
 
-      svg = d3
-      .select("#chart")
+    svg = d3.select("#chart")
     bars = svg.selectAll("rect").data(values);
 
     bars
