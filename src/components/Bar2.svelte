@@ -542,7 +542,7 @@
     margin-left: 40px;
     margin-right: 40px;
     text-align: center;
-    height: 10%;
+    height: 10% ;
     font-family: Arial, Helvetica, sans-serif;
   }
 </style>

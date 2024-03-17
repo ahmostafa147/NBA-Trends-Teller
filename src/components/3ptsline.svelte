@@ -289,32 +289,6 @@
       u3.exit().remove();
     }
   }
-function renderYearAvg3pt() {
-      u3 = line3.selectAll(".line2").data([year_three_avg]);
-      u3.enter()
-        .append("path")
-        .attr("class", "line2")
-        .merge(u)
-        .transition()
-        .duration(1000)
-        .attr(
-          "d",
-          d3
-            .line()
-            .x(function (d) {
-              return xLine3(d.year);
-            })
-            .y(function (d) {
-              return yLine3(d.avg);
-            })
-            .curve(d3.curveBasis),
-        )
-        .attr("fill", "none")
-        .attr("stroke", (d, i) => colors[i])
-        .attr("stroke-width", 2.5);
-      u3.exit().remove();
-    }
-  
 function checkbox3pt(data) {
     select2 = d3
       .select("#body3pt")
@@ -421,7 +395,7 @@ function checkbox3pt(data) {
   function originalLegend() {
     d3.select("#legend2").selectAll("*").remove();
     if (teams.length != 0) {
-      let legendItem = d3.select("#legend").attr("class", "legend-item");
+      let legendItem = d3.select("#legend2").attr("class", "legend-item");
 
       // Add colored rectangles (squares) to represent each team
       legendItem

@@ -176,10 +176,10 @@
   onMount(() => {
     d3.csv("src/NBA_PACE.csv").then((csvdata) => {
       paceData = csvdata;
-    })
+    });
     d3.csv("src/NBA_3PA.csv").then((csvdata) => {
       threepointData = csvdata;
-    })
+    });
     d3.csv("src/DSC106_NBA.csv").then((csvData) => {
       data = csvData;
       let tempData = cloneDeep(data);
@@ -202,7 +202,7 @@
       renderLinePlotPace();
       checkbox(options);
       let threeData = cloneDeep(threepointData);
-      counter=0
+      counter = 0;
       for (let yr_data of threeData) {
         let toAdd3 = {};
         toAdd3["year"] = parseInt(yr_data.Year);
@@ -248,7 +248,10 @@
 
     x = d3.scaleBand().domain(keys).range([0, width]).padding(0.1);
 
-    y = d3.scaleLinear().domain([minVal - minVal, maxVal - minVal]).range([height, 0]);
+    y = d3
+      .scaleLinear()
+      .domain([minVal - minVal, maxVal - minVal])
+      .range([height, 0]);
 
     svg
       .append("g")
@@ -384,7 +387,9 @@
     // console.log(tooltip.selectAll('text'));
     // const first = tooltip.select('text')
     // tooltip.select('text').text(`${d.team}: ${d.score}`);
-    tooltip.select("text:nth-child(3)").text(`PPG Diff: ${Math.round(d.score * 100) / 100}`);
+    tooltip
+      .select("text:nth-child(3)")
+      .text(`PPG Diff: ${Math.round(d.score * 100) / 100}`);
     // tooltip.select("text:nth-child(3)").text(`PPG: ${d.score}`);
     // tooltip.selectAll('text').text(`${d.team}: ${d.score}`);
   }
@@ -520,7 +525,10 @@
 
     x = d3.scaleBand().domain(keys).range([0, width]).padding(0.1);
 
-    y = d3.scaleLinear().domain([minVal - minVal, maxVal - minVal]).range([height, 0]);
+    y = d3
+      .scaleLinear()
+      .domain([minVal - minVal, maxVal - minVal])
+      .range([height, 0]);
 
     svg1
       .append("g")
@@ -762,7 +770,10 @@
 
     x = d3.scaleBand().domain(keys).range([0, width]).padding(0.1);
 
-    y = d3.scaleLinear().domain([minVal - minVal, maxVal - minVal]).range([height, 0]);
+    y = d3
+      .scaleLinear()
+      .domain([minVal - minVal, maxVal - minVal])
+      .range([height, 0]);
 
     svg2
       .append("g")
@@ -984,7 +995,10 @@
 
     x = d3.scaleBand().domain(keys).range([0, width]).padding(0.1);
 
-    y = d3.scaleLinear().domain([minVal - minVal, maxVal - minVal]).range([height, 0]);
+    y = d3
+      .scaleLinear()
+      .domain([minVal - minVal, maxVal - minVal])
+      .range([height, 0]);
 
     svg3
       .append("g")
@@ -1217,7 +1231,10 @@
 
     x = d3.scaleBand().domain(keys).range([0, width]).padding(0.1);
 
-    y = d3.scaleLinear().domain([minVal - minVal, maxVal - minVal]).range([height, 0]);
+    y = d3
+      .scaleLinear()
+      .domain([minVal - minVal, maxVal - minVal])
+      .range([height, 0]);
 
     svg5
       .append("g")
@@ -1445,7 +1462,6 @@
     }
   }
 
-
   function updateLine(dataArray) {
     if (team_line.length != 0) {
       u = line.selectAll(".line").data(Object.values(team_pts));
@@ -1477,7 +1493,6 @@
       renderYearAvg();
       originalLegend();
     }
-    
 
     function renderYearAvg() {
       u = line.selectAll(".line").data([year_avg]);
@@ -1764,10 +1779,11 @@
       .style("font-size", "20px");
   }
   function updateLegend(teams) {
-  // Remove existing legend items
-  d3.select("#legend").selectAll("*").remove();
-    if (teams.length != 0){
-      let legendItems = d3.select("#legend")
+    // Remove existing legend items
+    d3.select("#legend").selectAll("*").remove();
+    if (teams.length != 0) {
+      let legendItems = d3
+        .select("#legend")
         .selectAll("div")
         .data(teams)
         .enter()
@@ -1775,15 +1791,17 @@
         .attr("class", "legend-item");
 
       // Add colored rectangles (squares) to represent each team
-      legendItems.append("div")
+      legendItems
+        .append("div")
         .attr("class", "legend-color")
         .style("background-color", (d, i) => colors[i]) // Assign colors based on the colors array
         .style("width", "20px") // Adjust the width of the rectangle as needed
-        .style("height", "20px");// Assign colors based on the colors array
+        .style("height", "20px"); // Assign colors based on the colors array
 
       // Add text for each team
-      legendItems.append("div")
-        .text(d => d)
+      legendItems
+        .append("div")
+        .text((d) => d)
         .attr("class", "legend-text")
         .style("margin-right", "20px");
     }
@@ -1791,19 +1809,20 @@
 
   function originalLegend() {
     d3.select("#legend").selectAll("*").remove();
-    if (teams.length != 0){
-      let legendItem = d3.select("#legend")
-        .attr("class", "legend-item");
+    if (teams.length != 0) {
+      let legendItem = d3.select("#legend").attr("class", "legend-item");
 
       // Add colored rectangles (squares) to represent each team
-      legendItem.append("div")
+      legendItem
+        .append("div")
         .attr("class", "legend-color")
         .style("background-color", colors[0]) // Assign colors based on the colors array
         .style("width", "20px") // Adjust the width of the rectangle as needed
-        .style("height", "20px");// Assign colors based on the colors array
+        .style("height", "20px"); // Assign colors based on the colors array
 
       // Add text for each team
-      legendItem.append("div")
+      legendItem
+        .append("div")
         .text("League Average")
         .attr("class", "legend-text")
         .style("margin-right", "20px");
@@ -1811,7 +1830,6 @@
   }
 
   // Create legend items based on teams in team_line
-  
 
   // function checkbox(data) {
   //   select = d3
@@ -1834,7 +1852,6 @@
   //     updateLine(team_pts);
   //   });
   // }
-
 
   function renderLinePlotPace() {
     const margin = { top: 40, right: 120, bottom: 150, left: 60 };
@@ -1916,36 +1933,49 @@
 <main>
   <div id="title">
     <h1>
-      Is Defense Dying in the NBA?<img 
+      Is Defense Dying in the NBA?<img
         src="https://images.ctfassets.net/h8q6lxmb5akt/5qXnOINbPrHKXWa42m6NOa/421ab176b501f5bdae71290a8002545c/nba-logo_2x.png"
         ,
-        alt="NBA" class="NBA_img"
+        alt="NBA"
+        class="NBA_img"
       />
     </h1>
-    
+
     <div id="hook">
       <div class="container">
-        <div class="text_test">Common discourse around NBA fans and media is 
-          that scoring is getting out of hand. This season, it seems like 
-          someone is dropping 50 points in a game every week. Pioneered by 
-          Steph Curry and the Golden State Warriors, teams are shooting more 
-          threes than ever before. </div>
-        <img id="first_hook" src="https://a.espncdn.com/photo/2016/0303/r60200_2_1296x729_16-9.jpg" alt="pookie">
-      </div>    
+        <div class="text_test">
+          Common discourse around NBA fans and media is that scoring is getting
+          out of hand. This season, it seems like someone is dropping 50 points
+          in a game every week. Pioneered by Steph Curry and the Golden State
+          Warriors, teams are shooting more threes than ever before.
+        </div>
+        <img
+          id="first_hook"
+          src="https://a.espncdn.com/photo/2016/0303/r60200_2_1296x729_16-9.jpg"
+          alt="pookie"
+        />
+      </div>
       <div class="container">
-        <img id="second_hook" src="https://cdn.nba.com/manage/2021/08/michael-jordan-looks.jpg" alt="goat">
-        <div class="text_test">There is a narrative circulating that this spike 
-          in scoring is ruining the league. Many fans want to go back to the 
-          “good old days” of  “real” basketball, when players like Michael 
-          Jordan and Kobe Bryant maintained the integrity of the league.</div>
+        <img
+          id="second_hook"
+          src="https://cdn.nba.com/manage/2021/08/michael-jordan-looks.jpg"
+          alt="goat"
+        />
+        <div class="text_test">
+          There is a narrative circulating that this spike in scoring is ruining
+          the league. Many fans want to go back to the “good old days” of “real”
+          basketball, when players like Michael Jordan and Kobe Bryant
+          maintained the integrity of the league.
+        </div>
       </div>
       <div style="text-align:center">
-        <div style="font-size:20px">Our following visual article aims to explore 
-          historical scoring trends in the NBA and assess whether this panic is warranted.</div>
-      </div>    
+        <div style="font-size:20px">
+          Our following visual article aims to explore historical scoring trends
+          in the NBA and assess whether this panic is warranted.
+        </div>
+      </div>
     </div>
-    <div>
-    </div>
+    <div></div>
   </div>
   <div id="chart2" class="chart_class">
     <h2 style="text-align: left;">
@@ -1954,12 +1984,14 @@
     </h2>
   </div>
   <div class="paragraph_annotation">
-    <p>Let’s start our analysis of the history of scoring in the NBA in 1953. 
-      This season, the Milwaukee Hawks (now Atlanta Hawks) averaged a measly 70 
-      points per game. There were only 8 teams in the league and basketball 
-      during this era barely resembles modern basketball. For the rest of our 
-      analysis, we will be comparing all other teams and years relative to this 
-      lowpoint in scoring, which will be reflected in the axes values.</p>
+    <p>
+      Let’s start our analysis of the history of scoring in the NBA in 1953.
+      This season, the Milwaukee Hawks (now Atlanta Hawks) averaged a measly 70
+      points per game. There were only 8 teams in the league and basketball
+      during this era barely resembles modern basketball. For the rest of our
+      analysis, we will be comparing all other teams and years relative to this
+      lowpoint in scoring, which will be reflected in the axes values.
+    </p>
   </div>
   <div id="chart3" class="chart_class">
     <h2 style="text-align: left;">
@@ -1968,13 +2000,15 @@
     </h2>
   </div>
   <div class="paragraph_annotation">
-    <p>We now move forward to 1980. The NBA is thriving in this era, with the 
-      Showtime Lakers and the Magic versus Bird rivalry captivating fans. This 
-      year, the league had a scoring average of 108.1 points per game, which 
-      was pretty typical of the 70s and 80s. Trail blazed by the Showtime Lakers, 
-      teams were playing at an unprecedented pace. The three-point line was also 
-      introduced in 1979, allowing another avenue of elevated scoring although 
-      teams were not quick to prioritize it.</p>
+    <p>
+      We now move forward to 1980. The NBA is thriving in this era, with the
+      Showtime Lakers and the Magic versus Bird rivalry captivating fans. This
+      year, the league had a scoring average of 108.1 points per game, which was
+      pretty typical of the 70s and 80s. Trail blazed by the Showtime Lakers,
+      teams were playing at an unprecedented pace. The three-point line was also
+      introduced in 1979, allowing another avenue of elevated scoring although
+      teams were not quick to prioritize it.
+    </p>
   </div>
   <div id="chart4" class="chart_class">
     <h2 style="text-align: left;">
@@ -1983,13 +2017,16 @@
     </h2>
   </div>
   <div class="paragraph_annotation">
-    <p>We are now in 1998, and the turn of the century is characterized by much 
-      slower and physical play. During the 1998 season, the league averaged 91.6 
-      points per game, the lowest in the last thirty years and since the 1950s, 
-      when professional basketball was still in its infancy. Teams leaned heavily 
-      into isolation plays for their star players like Michael Jordan and Kobe 
-      Bryant, as the more physical defense aided by lenient foul calling made 
-      offense hard to come by. This style of play would persist well into the 2000s.</p>
+    <p>
+      We are now in 1998, and the turn of the century is characterized by much
+      slower and physical play. During the 1998 season, the league averaged 91.6
+      points per game, the lowest in the last thirty years and since the 1950s,
+      when professional basketball was still in its infancy. Teams leaned
+      heavily into isolation plays for their star players like Michael Jordan
+      and Kobe Bryant, as the more physical defense aided by lenient foul
+      calling made offense hard to come by. This style of play would persist
+      well into the 2000s.
+    </p>
   </div>
   <div id="chart5" class="chart_class">
     <h2 style="text-align: left;">
@@ -1998,15 +2035,19 @@
     </h2>
   </div>
   <div class="paragraph_annotation">
-    <p>The modern game is dominated by three point shooting and playbooks 
-      corroborated by advanced analytics. The skill level has reached an all-time 
-      high in the league as it has become more international than ever before, 
-      with the last five MVP awards going to foreign born players. In the most 
-      recent season, the league average was 114.7 points per game, a value not 
-      seen since the 1960s. Offensive superstars like Steph Curry, Lebron James, 
-      Nikola Jokic, and Kevin Durant dominate the headlines and are the standard 
-      of emulation for all teams around the league.</p>
-      <p>Below is an interactive, playable version of the static bar graphs above.</p>
+    <p>
+      The modern game is dominated by three point shooting and playbooks
+      corroborated by advanced analytics. The skill level has reached an
+      all-time high in the league as it has become more international than ever
+      before, with the last five MVP awards going to foreign born players. In
+      the most recent season, the league average was 114.7 points per game, a
+      value not seen since the 1960s. Offensive superstars like Steph Curry,
+      Lebron James, Nikola Jokic, and Kevin Durant dominate the headlines and
+      are the standard of emulation for all teams around the league.
+    </p>
+    <p>
+      Below is an interactive, playable version of the static bar graphs above.
+    </p>
   </div>
   <div id="chart" class="chart_class">
     <h2 style="text-align: left;">
@@ -2031,66 +2072,105 @@
     </div>
   </div>
   <div class="paragraph_annotation">
-    <p>While there may be some reason for worry, the 
-      widespread panic and announcements of the league’s downfall are greatly 
-      overblown. While scoring has increased drastically since the early 2000s, 
-      the current levels of unscoring are not completely unprecedented. Many 
-      years throughout the 70s and 80s, the league average would be north of 
-      110 points per game and therefore in the same ballpark as the current 
-      statistics. We believe that there is so much panic due to the demographic 
-      of NBA fans. Majority of NBA fans nowadays grew up either in the 90s or 
-      2000s with a childhood highlighted by either Jordan’s or Bryant’s dominance. 
-      These fans are conditioned to the slower, more physical playstyle and have 
-      only witnessed the NBA become “softer” and scoring increase in their 
-      lifetimes. However, if you consider the entirety of modern basketball, 
-      the 90s and 2000s are a valley in scoring and it is very possible that 
-      scoring follows a oscillating, sinusodial pattern and we are currently 
-      just at a peak. The one reservation we will make is that the rate scoring 
-      has increased in the last decade is unprecedented. In less than the last 
-      decade, the league average has increased from 100 to over 114 points per 
-      game. While the current average pace has not exceeded that of the run-and-gun 
-      Laker’s era in the 80s, we could be getting there soon and coupled with 
-      the proliferation of the three point shot, a truly unprecedented level of 
-      scoring could be on the horizon.</p>
-      <p>Below is an interactive line chart that shows scoring average over the years.</p>
+    <p>
+      While there may be some reason for worry, the widespread panic and
+      announcements of the league’s downfall are greatly overblown. While
+      scoring has increased drastically since the early 2000s, the current
+      levels of unscoring are not completely unprecedented. Many years
+      throughout the 70s and 80s, the league average would be north of 110
+      points per game and therefore in the same ballpark as the current
+      statistics. We believe that there is so much panic due to the demographic
+      of NBA fans. Majority of NBA fans nowadays grew up either in the 90s or
+      2000s with a childhood highlighted by either Jordan’s or Bryant’s
+      dominance. These fans are conditioned to the slower, more physical
+      playstyle and have only witnessed the NBA become “softer” and scoring
+      increase in their lifetimes. However, if you consider the entirety of
+      modern basketball, the 90s and 2000s are a valley in scoring and it is
+      very possible that scoring follows a oscillating, sinusodial pattern and
+      we are currently just at a peak. The one reservation we will make is that
+      the rate scoring has increased in the last decade is unprecedented. In
+      less than the last decade, the league average has increased from 100 to
+      over 114 points per game. While the current average pace has not exceeded
+      that of the run-and-gun Laker’s era in the 80s, we could be getting there
+      soon and coupled with the proliferation of the three point shot, a truly
+      unprecedented level of scoring could be on the horizon.
+    </p>
+    <p>
+      Below is an interactive line chart that shows scoring average over the
+      years.
+    </p>
   </div>
   <div id="highlightable-box" class="highlightable-box">
     <!-- Highlightable elements (team names) will be rendered here -->
   </div>
   <div id="body">
     <h2>Select teams to view:</h2>
-    <p>You can select multiple teams by either click and drag or by holding command/ctrl and clicking on the desired teams</p>
-    <div id="legend" class="legend-container">LEGEND PLACEHOLDER</div></div>
-  <div id="linechart" class="chart_class"><h2>Average Points Per Game over the Years</h2></div>
-  
-  <div class="highlightable-box"><h2 class ="centered_title">Conclusion</h2></div>
-  <div class="paragraph_annotation">
-    <p>NBA teams are scoring more and more points recently AND many fans are 
-      worried. BUT these fans have most likely only been watching since 90s and 
-      2000s and have therefore only witnessed an increase in scoring in their 
-      lifetimes. THEREFORE the current levels of scoring and the state of the 
-      game are not necessarily things to be worried about as we have seen 
-      similar levels of scoring in the past.</p>
+    <p>
+      You can select multiple teams by either click and drag or by holding
+      command/ctrl and clicking on the desired teams
+    </p>
+    <div id="legend" class="legend-container">LEGEND PLACEHOLDER</div>
   </div>
-  <div class="highlightable-box"><h2 class ="centered_title">Possible Explanation for Recent Scoring Spike</h2></div>
-  <div class="paragraph_annotation">
-    <p>There has been a recent explosion in the usage of the three point shot, 
-      with the average number of three point attempts going from 18 in 2011 to 
-      nearly doubling in the 2021 with 35.2. With more three pointers being 
-      attempted and teams greatly valuing high percentage three point shooters, 
-      expected scoring totals greatly increase. This is coupled with a rebound 
-      in the pace of play from the molasses marred speed of the 90s and 2000s 
-      to the more uptempo style of the 70s and 80s. For context, the slowest 
-      paced team this past season was still faster than the fastest team in 2001. 
-      The combination of these two phenomena is a possible cause for recent uptick.</p>
-      <p>Below are two graphs that help visualize the phenomena.</p>
+  <div id="linechart" class="chart_class">
+    <h2>Average Points Per Game over the Years</h2>
   </div>
-  <div id="body3pt"><h2>Select teams to view:</h2><p>You can select multiple teams by either click and drag or by holding command/ctrl and clicking on the desired teams</p></div>
-  <div id="linechart2" class="chart_class"><h2>Average Three Point Attempts Per Game Over the Years</h2></div>
-  <div id="linechartpace" class="chart_class"><h2>NBA Average Pace Over the Years</h2></div>
+
+  <div class="highlightable-box">
+    <h2 class="centered_title">Conclusion</h2>
+  </div>
+  <div class="paragraph_annotation">
+    <p>
+      NBA teams are scoring more and more points recently AND many fans are
+      worried. BUT these fans have most likely only been watching since 90s and
+      2000s and have therefore only witnessed an increase in scoring in their
+      lifetimes. THEREFORE the current levels of scoring and the state of the
+      game are not necessarily things to be worried about as we have seen
+      similar levels of scoring in the past.
+    </p>
+  </div>
+  <div class="highlightable-box">
+    <h2 class="centered_title">
+      Possible Explanation for Recent Scoring Spike
+    </h2>
+  </div>
+  <div class="paragraph_annotation">
+    <p>
+      There has been a recent explosion in the usage of the three point shot,
+      with the average number of three point attempts going from 18 in 2011 to
+      nearly doubling in the 2021 with 35.2. With more three pointers being
+      attempted and teams greatly valuing high percentage three point shooters,
+      expected scoring totals greatly increase. This is coupled with a rebound
+      in the pace of play from the molasses marred speed of the 90s and 2000s to
+      the more uptempo style of the 70s and 80s. For context, the slowest paced
+      team this past season was still faster than the fastest team in 2001. The
+      combination of these two phenomena is a possible cause for recent uptick.
+    </p>
+    <p>Below are two graphs that help visualize the phenomena.</p>
+  </div>
+  <div id="body3pt">
+    <h2>Select teams to view:</h2>
+    <p>
+      You can select multiple teams by either click and drag or by holding
+      command/ctrl and clicking on the desired teams
+    </p>
+  </div>
+  <div id="linechart2" class="chart_class">
+    <h2>Average Three Point Attempts Per Game Over the Years</h2>
+  </div>
+  <div id="linechartpace" class="chart_class">
+    <h2>NBA Average Pace Over the Years</h2>
+  </div>
   <h2 id="demo_title" class="centered_title">Demo Video</h2>
   <div id="vid">
-    <iframe width="560" height="315" src="https://www.youtube.com/embed/lzmLslPAlSw?si=bErPLGV8iQ0rVRRI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+    <iframe
+      width="560"
+      height="315"
+      src="https://www.youtube.com/embed/lzmLslPAlSw?si=bErPLGV8iQ0rVRRI"
+      title="YouTube video player"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen
+    ></iframe>
   </div>
   <!-- <div id="text">
     <h3 style="text-align: left;">Design Process and Decisions</h3>
@@ -2226,7 +2306,7 @@
   #overlay {
     font-size: 0.9em;
     /* position: absolute; */
-    margin-left: auto; 
+    margin-left: auto;
     margin-right: 0;
     min-width: 250px;
     width: 15%;
@@ -2250,7 +2330,8 @@
     font-weight: bold;
   }
 
-  .chart_class, #title {
+  .chart_class,
+  #title {
     background-color: antiquewhite;
     margin: auto;
     display: flex;
@@ -2279,7 +2360,8 @@
     height: 20%;
   }
 
-  #text, .paragraph_annotation {
+  #text,
+  .paragraph_annotation {
     font-size: 18px;
     margin-left: 40px;
     margin-right: 40px;
@@ -2287,7 +2369,11 @@
     font-family: Arial, Helvetica, sans-serif;
   }
 
-  .highlightable-box, #body, #body3pt, #demo_title, iframe {
+  .highlightable-box,
+  #body,
+  #body3pt,
+  #demo_title,
+  iframe {
     margin-left: 40px;
     margin-right: 40px;
   }
@@ -2302,16 +2388,17 @@
     margin-left: 30px; /* Adjust spacing between image and text */
     margin-right: 30px;
     width: 400px;
-    font-size:18px;
+    font-size: 18px;
     text-align: justify;
-
   }
 
-  #first_hook, #second_hook {
+  #first_hook,
+  #second_hook {
     height: 250px;
   }
 
-  #linechart, #linechart2 {
+  #linechart,
+  #linechart2 {
     margin-top: -100px;
     margin-bottom: -50px;
   }
@@ -2321,29 +2408,28 @@
   iframe {
     display: flex;
     justify-content: center;
-    align-items: center; 
+    align-items: center;
   }
   #vid {
     display: flex;
-  justify-content: center;
-  align-items: center;
+    justify-content: center;
+    align-items: center;
   }
   #legend {
-  display: flex; /* Display legend items in a flex container */
-  flex-wrap: wrap; /* Allow legend items to wrap to next line if needed */
-}
+    display: flex; /* Display legend items in a flex container */
+    flex-wrap: wrap; /* Allow legend items to wrap to next line if needed */
+  }
   .legend-container {
-  display: flex; /* Display legend items in a flex container */
-  flex-wrap: wrap; /* Allow legend items to wrap to next line if needed */
-}
+    display: flex; /* Display legend items in a flex container */
+    flex-wrap: wrap; /* Allow legend items to wrap to next line if needed */
+  }
 
-.legend-item {
-  margin-right: 20px; /* Adjust margin between legend items */
-}
+  .legend-item {
+    margin-right: 20px; /* Adjust margin between legend items */
+  }
 
-.legend-color {
-  display: inline-block; /* Display colored rectangles inline */
-  margin-right: 5px; /* Adjust margin between colored rectangles and text */
-}
-
+  .legend-color {
+    display: inline-block; /* Display colored rectangles inline */
+    margin-right: 5px; /* Adjust margin between colored rectangles and text */
+  }
 </style>
