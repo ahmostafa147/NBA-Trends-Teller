@@ -1502,7 +1502,7 @@
       u.exit().remove();
     }
   }
-S: console.log(team_3pt_line);
+
   function update3ptLine(dataArray) {
     if (team_3pt_line.length != 0) {
       u3 = line3.selectAll(".liness2").data(Object.values(team_3pts));
@@ -1518,10 +1518,10 @@ S: console.log(team_3pt_line);
           d3
             .line()
             .x(function (d) {
-              return xLine(d.year);
+              return xLine3(d.year);
             })
             .y(function (d) {
-              return yLine(d.pts);
+              return yLine3(d.pts);
             })
             .curve(d3.curveBasis),
         )
@@ -1611,6 +1611,31 @@ S: console.log(team_3pt_line);
       .attr("fill", "none")
       .attr("stroke", "red")
       .attr("stroke-width", 2.5);
+
+    line
+      .append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 0 - margin.left) // Adjust the position as needed
+      .attr("x", 0 - height / 2)
+      .attr("dy", "1em")
+      .style("text-anchor", "middle")
+      .text("Average Points Per Game")
+      .style(
+        "font-family",
+        "Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif",
+      )
+      .style("font-size", "20px");
+
+    line
+      .append("text")
+      .attr("transform", `translate(${width / 2}, ${height + 120})`) // Adjust the position as needed
+      .style("text-anchor", "middle")
+      .text("Year")
+      .style(
+        "font-family",
+        "Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif",
+      )
+      .style("font-size", "20px");
   }
 
   function checkbox(data) {
@@ -1667,9 +1692,9 @@ S: console.log(team_3pt_line);
     let minimumY = 0;
     let maximumY = Math.max(...year_avg.map((obj) => obj["avg"])) + 20;
 
-    xLine3 = d3.scaleLinear().domain([minimumX, maximumX]).range([0, width]);
+    xLine3 = d3.scaleLinear().domain([1979, maximumX]).range([0, width]);
 
-    yLine3 = d3.scaleLinear().domain([minimumY, maximumY]).range([height, 0]);
+    yLine3 = d3.scaleLinear().domain([minimumY, 40]).range([height, 0]);
 
     line3 = d3
       .select("#linechart2")
@@ -1683,9 +1708,9 @@ S: console.log(team_3pt_line);
     line3
       .append("g")
       .attr("transform", `translate(0,${height})`)
-      .call(d3.axisBottom(xLine));
+      .call(d3.axisBottom(xLine3));
 
-    line3.append("g").call(d3.axisLeft(yLine));
+    line3.append("g").call(d3.axisLeft(yLine3));
 
     line3
       .selectAll("line2")
@@ -1697,10 +1722,10 @@ S: console.log(team_3pt_line);
         d3
           .line()
           .x(function (d) {
-            return xLine(d.year);
+            return xLine3(d.year);
           })
           .y(function (d) {
-            return yLine(d.avg);
+            return yLine3(d.avg);
           })
           .curve(d3.curveBasis),
       )
@@ -1708,6 +1733,31 @@ S: console.log(team_3pt_line);
       .attr("fill", "none")
       .attr("stroke", "red")
       .attr("stroke-width", 2.5);
+
+    line3
+      .append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 0 - margin.left) // Adjust the position as needed
+      .attr("x", 0 - height / 2)
+      .attr("dy", "1em")
+      .style("text-anchor", "middle")
+      .text("Average Three Point Attempts Per Game")
+      .style(
+        "font-family",
+        "Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif",
+      )
+      .style("font-size", "20px");
+
+    line3
+      .append("text")
+      .attr("transform", `translate(${width / 2}, ${height + 120})`) // Adjust the position as needed
+      .style("text-anchor", "middle")
+      .text("Year")
+      .style(
+        "font-family",
+        "Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif",
+      )
+      .style("font-size", "20px");
   }
 
   // function checkbox(data) {
@@ -1782,6 +1832,31 @@ S: console.log(team_3pt_line);
       .attr("fill", "none")
       .attr("stroke", "red")
       .attr("stroke-width", 2.5);
+
+    linePace
+      .append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 0 - margin.left) // Adjust the position as needed
+      .attr("x", 0 - height / 2)
+      .attr("dy", "1em")
+      .style("text-anchor", "middle")
+      .text("Average Pace Per Game")
+      .style(
+        "font-family",
+        "Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif",
+      )
+      .style("font-size", "20px");
+
+    linePace
+      .append("text")
+      .attr("transform", `translate(${width / 2}, ${height + 120})`) // Adjust the position as needed
+      .style("text-anchor", "middle")
+      .text("Year")
+      .style(
+        "font-family",
+        "Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif",
+      )
+      .style("font-size", "20px");
   }
 </script>
 
@@ -1940,13 +2015,23 @@ S: console.log(team_3pt_line);
       game are not necessarily things to be worried about as we have seen 
       similar levels of scoring in the past.</p>
   </div>
+  <div class="highlightable-box"><h2>Possible Explanation for Recent Scoring Spike</h2></div>
+  <div class="paragraph_annotation">
+    <p>There has been a recent explosion in the usage of the three point shot, 
+      with the average number of three point attempts going from 18 in 2011 to 
+      nearly doubling in the 2021 with 35.2. With more three pointers being 
+      attempted and teams greatly valuing high percentage three point shooters, 
+      expected scoring totals greatly increase. This is coupled with a rebound 
+      in the pace of play from the molasses marred speed of the 90s and 2000s 
+      to the more uptempo style of the 70s and 80s. For context, the slowest 
+      paced team this past season was still faster than the fastest team in 2001. 
+      The combination of these two phenomena is a possible cause for recent uptick.</p>
+      <p>Below are two graphs that help visualize the phenomena.</p>
+  </div>
   <div id="body3pt"><h2>Select teams to view:</h2><p>You can select multiple teams by either click and drag or by holding command/ctrl and clicking on the desired teams</p></div>
   <div id="linechart2" class="chart_class"><h2>Average Three Point Attempts Per Game Over the Years</h2></div>
   <div id="linechartpace" class="chart_class"><h2>NBA Average Pace Over the Years</h2></div>
-  <div class="paragraph_annotation">
-    <p>PARAGRAPH ANNOTATION PLACEHOLDER</p>
-  </div>
-  <div id="text">
+  <!-- <div id="text">
     <h3 style="text-align: left;">Design Process and Decisions</h3>
     <p style="font-size: 24;">
       A common narrative and topic of debate amongst NBA (National Basketball
@@ -2073,7 +2158,7 @@ S: console.log(team_3pt_line);
       together for the majority of the project and constantly bounced ideas and
       feedback off of each other.
     </p>
-  </div>
+  </div> -->
 </main>
 
 <style>
@@ -2163,6 +2248,11 @@ S: console.log(team_3pt_line);
 
   #first_hook, #second_hook {
     height: 250px;
+  }
+
+  #linechart, #linechart2 {
+    margin-top: -100px;
+    margin-bottom: -50px;
   }
 
 </style>
