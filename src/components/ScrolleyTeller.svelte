@@ -254,7 +254,6 @@
     width: 100%;
     height: 100vh;
     position: relative;
-    outline: green solid 3px;
   }
 
   .foreground {
