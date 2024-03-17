@@ -1472,9 +1472,12 @@
         .attr("stroke", (d, i) => colors[i])
         .attr("stroke-width", 2.5);
       u.exit().remove();
+      updateLegend(team_line);
     } else {
       renderYearAvg();
+      originalLegend();
     }
+    
 
     function renderYearAvg() {
       u = line.selectAll(".line").data([year_avg]);
@@ -1636,6 +1639,7 @@
         "Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif",
       )
       .style("font-size", "20px");
+    // originalLegend();
   }
 
   function checkbox(data) {
@@ -1759,6 +1763,55 @@
       )
       .style("font-size", "20px");
   }
+  function updateLegend(teams) {
+  // Remove existing legend items
+  d3.select("#legend").selectAll("*").remove();
+    if (teams.length != 0){
+      let legendItems = d3.select("#legend")
+        .selectAll("div")
+        .data(teams)
+        .enter()
+        .append("div")
+        .attr("class", "legend-item");
+
+      // Add colored rectangles (squares) to represent each team
+      legendItems.append("div")
+        .attr("class", "legend-color")
+        .style("background-color", (d, i) => colors[i]) // Assign colors based on the colors array
+        .style("width", "20px") // Adjust the width of the rectangle as needed
+        .style("height", "20px");// Assign colors based on the colors array
+
+      // Add text for each team
+      legendItems.append("div")
+        .text(d => d)
+        .attr("class", "legend-text")
+        .style("margin-right", "20px");
+    }
+  }
+
+  function originalLegend() {
+    d3.select("#legend").selectAll("*").remove();
+    if (teams.length != 0){
+      let legendItem = d3.select("#legend")
+        .attr("class", "legend-item");
+
+      // Add colored rectangles (squares) to represent each team
+      legendItem.append("div")
+        .attr("class", "legend-color")
+        .style("background-color", colors[0]) // Assign colors based on the colors array
+        .style("width", "20px") // Adjust the width of the rectangle as needed
+        .style("height", "20px");// Assign colors based on the colors array
+
+      // Add text for each team
+      legendItem.append("div")
+        .text("League Average")
+        .attr("class", "legend-text")
+        .style("margin-right", "20px");
+    }
+  }
+
+  // Create legend items based on teams in team_line
+  
 
   // function checkbox(data) {
   //   select = d3
@@ -2004,9 +2057,13 @@
   <div id="highlightable-box" class="highlightable-box">
     <!-- Highlightable elements (team names) will be rendered here -->
   </div>
-  <div id="body"><h2>Select teams to view:</h2><p>You can select multiple teams by either click and drag or by holding command/ctrl and clicking on the desired teams</p></div>
+  <div id="body">
+    <h2>Select teams to view:</h2>
+    <p>You can select multiple teams by either click and drag or by holding command/ctrl and clicking on the desired teams</p>
+    <div id="legend" class="legend-container">LEGEND PLACEHOLDER</div></div>
   <div id="linechart" class="chart_class"><h2>Average Points Per Game over the Years</h2></div>
-  <div class="highlightable-box"><h2>Conclusion</h2></div>
+  
+  <div class="highlightable-box"><h2 class ="centered_title">Conclusion</h2></div>
   <div class="paragraph_annotation">
     <p>NBA teams are scoring more and more points recently AND many fans are 
       worried. BUT these fans have most likely only been watching since 90s and 
@@ -2015,7 +2072,7 @@
       game are not necessarily things to be worried about as we have seen 
       similar levels of scoring in the past.</p>
   </div>
-  <div class="highlightable-box"><h2>Possible Explanation for Recent Scoring Spike</h2></div>
+  <div class="highlightable-box"><h2 class ="centered_title">Possible Explanation for Recent Scoring Spike</h2></div>
   <div class="paragraph_annotation">
     <p>There has been a recent explosion in the usage of the three point shot, 
       with the average number of three point attempts going from 18 in 2011 to 
@@ -2031,6 +2088,10 @@
   <div id="body3pt"><h2>Select teams to view:</h2><p>You can select multiple teams by either click and drag or by holding command/ctrl and clicking on the desired teams</p></div>
   <div id="linechart2" class="chart_class"><h2>Average Three Point Attempts Per Game Over the Years</h2></div>
   <div id="linechartpace" class="chart_class"><h2>NBA Average Pace Over the Years</h2></div>
+  <h2 id="demo_title" class="centered_title">Demo Video</h2>
+  <div id="vid">
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/lzmLslPAlSw?si=bErPLGV8iQ0rVRRI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+  </div>
   <!-- <div id="text">
     <h3 style="text-align: left;">Design Process and Decisions</h3>
     <p style="font-size: 24;">
@@ -2226,7 +2287,7 @@
     font-family: Arial, Helvetica, sans-serif;
   }
 
-  .highlightable-box, #body, #body3pt {
+  .highlightable-box, #body, #body3pt, #demo_title, iframe {
     margin-left: 40px;
     margin-right: 40px;
   }
@@ -2254,5 +2315,35 @@
     margin-top: -100px;
     margin-bottom: -50px;
   }
+  .centered_title {
+    text-align: center;
+  }
+  iframe {
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+  }
+  #vid {
+    display: flex;
+  justify-content: center;
+  align-items: center;
+  }
+  #legend {
+  display: flex; /* Display legend items in a flex container */
+  flex-wrap: wrap; /* Allow legend items to wrap to next line if needed */
+}
+  .legend-container {
+  display: flex; /* Display legend items in a flex container */
+  flex-wrap: wrap; /* Allow legend items to wrap to next line if needed */
+}
+
+.legend-item {
+  margin-right: 20px; /* Adjust margin between legend items */
+}
+
+.legend-color {
+  display: inline-block; /* Display colored rectangles inline */
+  margin-right: 5px; /* Adjust margin between colored rectangles and text */
+}
 
 </style>
