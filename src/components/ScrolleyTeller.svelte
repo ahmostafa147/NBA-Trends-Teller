@@ -54,6 +54,22 @@
   } else {
     isVisible6 = false;
   }
+
+  let isVisible7 = false;
+
+  $: if (index === 6) {
+    isVisible7 = true;
+  } else {
+    isVisible7 = false;
+  }
+
+  let isVisible8 = false;
+
+  $: if (index === 7) {
+    isVisible8 = true;
+  } else {
+    isVisible8 = false;
+  }
 </script>
 
 <Scroller
@@ -79,7 +95,7 @@
   </div>
   <div class="foreground" slot="foreground">
     <!-- <App {index}/> -->
-    <section>
+    <section style="height:150vh">
       <div id="please2" class:visible={isVisible1}><Bar2 /></div>
     </section>
     <section>
@@ -97,11 +113,17 @@
     <section>
       <div id="please6" class:visible={isVisible6}><Ptsline /></div>
     </section>
+    <section>
+      <div id="please7" class:visible={isVisible7}><Pts3line /></div>
+    </section>
+    <section>
+      <div id="please8" class:visible={isVisible8}><Pace /></div>
+    </section>
   </div>
 </Scroller>
 
 <style>
-    #please2 {
+  #please7 {
     width: 100%;
     height: 100vh; /* check problem when setting width */
     position: absolute;
@@ -112,8 +134,37 @@
       visibility 2s;
   }
 
-  #please2.visible {
+  #please7.visible {
     opacity: 1;
+    visibility: visible;
+  }
+  #please8 {
+    width: 100%;
+    height: 100vh; /* check problem when setting width */
+    position: absolute;
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity 2s,
+      visibility 2s;
+  }
+
+  #please8.visible {
+    opacity: 1;
+    visibility: visible;
+  }
+    #please2 {
+    width: 100%;
+    height: 100vh; /* check problem when setting width */
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity 3s,
+      visibility 3s;
+  }
+
+  #please2.visible {
+    opacity: 5;
     visibility: visible;
   }
 
@@ -218,11 +269,10 @@
   }
 
   section {
-    height: 80vh;
-
+    height: 100vh;
     color: white;
     text-align: center;
-    max-width: 750px; /* adjust at will */
+    max-width: 7500px; /* adjust at will */
     color: black;
     padding: 1em;
     margin: 0 0 2em 0;

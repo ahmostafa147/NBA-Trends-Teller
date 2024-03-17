@@ -9,16 +9,14 @@
     import Pts3line from '../components/3ptsline.svelte'
     import Pace from '../components/pace.svelte'
     import Scroller from '../components/ScrolleyTeller.svelte'
-    import Please from '../components/App1.svelte'
-    import App1 from '../components/App1.svelte'
-    import App2 from '../components/PlotSection.svelte'
+
 
 </script>
 <!-- <App2 /> -->
 <!-- <App1 /> -->
 <!-- <Scroller /> -->
-<!-- <App /> -->
-<Bar1 />
+<App />
+<!-- <Bar1 /> -->
 <!-- <Bar2 /> -->
 <!-- <Bar3 /> -->
 <!-- <Bar4 /> -->

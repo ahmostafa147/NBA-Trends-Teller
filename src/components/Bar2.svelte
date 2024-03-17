@@ -1,189 +1,187 @@
 <script>
-    import { onMount } from "svelte";
-    import * as d3 from "d3";
-    import cloneDeep from "lodash/cloneDeep";
-    let data = [];
-    let keys = [];
-    let teams = [];
-    let values = [];
-    let year = 1950;
-    let interval;
-    let playing = false;
-    let minVal = 70;
-    let maxVal = 130;
-    let svg;
-    let svg1;
-    let svg2;
-    let svg3;
-    let svg5;
-    let select;
-    let select2;
-    let xLine;
-    let yLine;
-    let xLine2;
-    let yLine2;
-    let line3;
-    let xLine3;
-    let yLine3;
-    let u;
-    let u3;
-    let x;
-    let y;
-    let bars;
-    let height;
-    let logos;
-    let team_line = [];
-    let team_3pt_line = [];
-    let year_avg = [];
-    let year_three_avg = [];
-    var counter = 0;
-    let team_pts = {};
-    let team_3pts = {};
-    let threepointData;
-    let tooltip;
-    let line;
-    let linePace;
-    let paceData;
-    const colors = [
-        "#1f77b4",
-        "#ff7f0e",
-        "#2ca02c",
-        "#d62728",
-        "#9467bd",
-        "#8c564b",
-        "#e377c2",
-        "#7f7f7f",
-        "#bcbd22",
-        "#17becf",
-        "#aec7e8",
-        "#ffbb78",
-        "#98df8a",
-        "#ff9896",
-        "#c5b0d5",
-        "#c49c94",
-        "#f7b6d2",
-        "#c7c7c7",
-        "#dbdb8d",
-        "#9edae5",
-        "#393b79",
-        "#ff9896",
-        "#2ca02c",
-        "#d62728",
-        "#9467bd",
-        "#8c564b",
-        "#1f77b4",
-        "#7f7f7f",
-        "#bcbd22",
-        "#17becf",
-        "#aec7e8",
-    ];
+  import { onMount } from "svelte";
+  import * as d3 from "d3";
+  import cloneDeep from "lodash/cloneDeep";
+  let data = [];
+  let keys = [];
+  let teams = [];
+  let values = [];
+  let year = 1950;
+  let interval;
+  let playing = false;
+  let minVal = 70;
+  let maxVal = 130;
+  let svg;
+  let svg1;
+  let svg2;
+  let svg3;
+  let svg5;
+  let select;
+  let select2;
+  let xLine;
+  let yLine;
+  let xLine2;
+  let yLine2;
+  let line3;
+  let xLine3;
+  let yLine3;
+  let u;
+  let u3;
+  let x;
+  let y;
+  let bars;
+  let height;
+  let logos;
+  let team_line = [];
+  let team_3pt_line = [];
+  let year_avg = [];
+  let year_three_avg = [];
+  var counter = 0;
+  let team_pts = {};
+  let team_3pts = {};
+  let threepointData;
+  let tooltip;
+  let line;
+  let linePace;
+  let paceData;
+  const colors = [
+    "#1f77b4",
+    "#ff7f0e",
+    "#2ca02c",
+    "#d62728",
+    "#9467bd",
+    "#8c564b",
+    "#e377c2",
+    "#7f7f7f",
+    "#bcbd22",
+    "#17becf",
+    "#aec7e8",
+    "#ffbb78",
+    "#98df8a",
+    "#ff9896",
+    "#c5b0d5",
+    "#c49c94",
+    "#f7b6d2",
+    "#c7c7c7",
+    "#dbdb8d",
+    "#9edae5",
+    "#393b79",
+    "#ff9896",
+    "#2ca02c",
+    "#d62728",
+    "#9467bd",
+    "#8c564b",
+    "#1f77b4",
+    "#7f7f7f",
+    "#bcbd22",
+    "#17becf",
+    "#aec7e8",
+  ];
 
-    const options = [
-        "Boston Celtics",
-        "New York Knicks",
-        "Golden State Warriors",
-        "Sacramento Kings",
-        "Los Angeles Lakers",
-        "Detroit Pistons",
-        "Philadelphia 76ers",
-        "Atlanta Hawks",
-        "Washington Wizards",
-        "Chicago Bulls",
-        "Houston Rockets",
-        "Oklahoma City Thunder",
-        "Brooklyn Nets",
-        "Denver Nuggets",
-        "Indiana Pacers",
-        "San Antonio Spurs",
-        "Milwaukee Bucks",
-        "Phoenix Suns",
-        "Cleveland Cavaliers",
-        "Los Angeles Clippers",
-        "Portland Trail Blazers",
-        "Utah Jazz",
-        "Dallas Mavericks",
-        "Miami Heat",
-        "Orlando Magic",
-        "Minnesota Timberwolves",
-        "Charlotte Hornets",
-        "Memphis Grizzlies",
-        "Toronto Raptors",
-        "New Orleans Pelicans",
-    ];
+  const options = [
+    "Boston Celtics",
+    "New York Knicks",
+    "Golden State Warriors",
+    "Sacramento Kings",
+    "Los Angeles Lakers",
+    "Detroit Pistons",
+    "Philadelphia 76ers",
+    "Atlanta Hawks",
+    "Washington Wizards",
+    "Chicago Bulls",
+    "Houston Rockets",
+    "Oklahoma City Thunder",
+    "Brooklyn Nets",
+    "Denver Nuggets",
+    "Indiana Pacers",
+    "San Antonio Spurs",
+    "Milwaukee Bucks",
+    "Phoenix Suns",
+    "Cleveland Cavaliers",
+    "Los Angeles Clippers",
+    "Portland Trail Blazers",
+    "Utah Jazz",
+    "Dallas Mavericks",
+    "Miami Heat",
+    "Orlando Magic",
+    "Minnesota Timberwolves",
+    "Charlotte Hornets",
+    "Memphis Grizzlies",
+    "Toronto Raptors",
+    "New Orleans Pelicans",
+  ];
 
-    const teamLogos = {
-        "Atlanta Hawks": "modeling_plot/src/components/logos/atlanta hawks.svg",
-        "Boston Celtics":
-            "https://cdn.nba.com/logos/nba/1610612738/primary/L/logo.svg",
-        "Brooklyn Nets":
-            "https://cdn.nba.com/logos/nba/1610612751/primary/L/logo.svg",
-        "New York Knicks":
-            "https://cdn.nba.com/logos/nba/1610612752/primary/L/logo.svg",
-        "Philadelphia 76ers":
-            "https://cdn.nba.com/logos/nba/1610612755/primary/L/logo.svg",
-        "Toronto Raptors":
-            "https://cdn.nba.com/logos/nba/1610612761/primary/L/logo.svg",
-        "Chicago Bulls":
-            "https://cdn.nba.com/logos/nba/1610612741/primary/L/logo.svg",
-        "Cleveland Cavaliers":
-            "https://cdn.nba.com/logos/nba/1610612739/primary/L/logo.svg",
-        "Detroit Pistons":
-            "https://cdn.nba.com/logos/nba/1610612765/primary/L/logo.svg",
-        "Indiana Pacers":
-            "https://cdn.nba.com/logos/nba/1610612754/primary/L/logo.svg",
-        "Milwaukee Bucks":
-            "https://cdn.nba.com/logos/nba/1610612749/primary/L/logo.svg",
-        "Atlanta Hawks":
-            "https://cdn.nba.com/logos/nba/1610612737/primary/L/logo.svg",
-        "Charlotte Hornets":
-            "https://cdn.nba.com/logos/nba/1610612766/primary/L/logo.svg",
-        "Miami Heat":
-            "https://cdn.nba.com/logos/nba/1610612748/primary/L/logo.svg",
-        "Orlando Magic":
-            "https://cdn.nba.com/logos/nba/1610612753/primary/L/logo.svg",
-        "Washington Wizards":
-            "https://cdn.nba.com/logos/nba/1610612764/primary/L/logo.svg",
-        "Denver Nuggets":
-            "https://cdn.nba.com/logos/nba/1610612743/primary/L/logo.svg",
-        "Minnesota Timberwolves":
-            "https://cdn.nba.com/logos/nba/1610612750/primary/L/logo.svg",
-        "Oklahoma City Thunder":
-            "https://cdn.nba.com/logos/nba/1610612760/primary/L/logo.svg",
-        "Portland Trail Blazers":
-            "https://cdn.nba.com/logos/nba/1610612757/primary/L/logo.svg",
-        "Utah Jazz":
-            "https://cdn.nba.com/logos/nba/1610612762/primary/L/logo.svg",
-        "Golden State Warriors":
-            "https://cdn.nba.com/logos/nba/1610612744/primary/L/logo.svg",
-        "Los Angeles Clippers":
-            "https://cdn.nba.com/logos/nba/1610612746/primary/L/logo.svg",
-        "Los Angeles Lakers":
-            "https://cdn.nba.com/logos/nba/1610612747/primary/L/logo.svg",
-        "Phoenix Suns":
-            "https://cdn.nba.com/logos/nba/1610612756/primary/L/logo.svg",
-        "Sacramento Kings":
-            "https://cdn.nba.com/logos/nba/1610612758/primary/L/logo.svg",
-        "Dallas Mavericks":
-            "https://cdn.nba.com/logos/nba/1610612742/primary/L/logo.svg",
-        "Houston Rockets":
-            "https://cdn.nba.com/logos/nba/1610612745/primary/L/logo.svg",
-        "Memphis Grizzlies":
-            "https://cdn.nba.com/logos/nba/1610612763/primary/L/logo.svg",
-        "New Orleans Pelicans":
-            "https://cdn.nba.com/logos/nba/1610612740/primary/L/logo.svg",
-        "San Antonio Spurs":
-            "https://cdn.nba.com/logos/nba/1610612759/primary/L/logo.svg",
-    };
-    let isMounted = false
-    onMount(() => {
-        d3.csv("src/DSC106_NBA.csv").then((csvData) => {
-            data = csvData;
-            renderBarChart2(1953);
-        });
-        isMounted = true
+  const teamLogos = {
+    "Atlanta Hawks": "modeling_plot/src/components/logos/atlanta hawks.svg",
+    "Boston Celtics":
+      "https://cdn.nba.com/logos/nba/1610612738/primary/L/logo.svg",
+    "Brooklyn Nets":
+      "https://cdn.nba.com/logos/nba/1610612751/primary/L/logo.svg",
+    "New York Knicks":
+      "https://cdn.nba.com/logos/nba/1610612752/primary/L/logo.svg",
+    "Philadelphia 76ers":
+      "https://cdn.nba.com/logos/nba/1610612755/primary/L/logo.svg",
+    "Toronto Raptors":
+      "https://cdn.nba.com/logos/nba/1610612761/primary/L/logo.svg",
+    "Chicago Bulls":
+      "https://cdn.nba.com/logos/nba/1610612741/primary/L/logo.svg",
+    "Cleveland Cavaliers":
+      "https://cdn.nba.com/logos/nba/1610612739/primary/L/logo.svg",
+    "Detroit Pistons":
+      "https://cdn.nba.com/logos/nba/1610612765/primary/L/logo.svg",
+    "Indiana Pacers":
+      "https://cdn.nba.com/logos/nba/1610612754/primary/L/logo.svg",
+    "Milwaukee Bucks":
+      "https://cdn.nba.com/logos/nba/1610612749/primary/L/logo.svg",
+    "Atlanta Hawks":
+      "https://cdn.nba.com/logos/nba/1610612737/primary/L/logo.svg",
+    "Charlotte Hornets":
+      "https://cdn.nba.com/logos/nba/1610612766/primary/L/logo.svg",
+    "Miami Heat": "https://cdn.nba.com/logos/nba/1610612748/primary/L/logo.svg",
+    "Orlando Magic":
+      "https://cdn.nba.com/logos/nba/1610612753/primary/L/logo.svg",
+    "Washington Wizards":
+      "https://cdn.nba.com/logos/nba/1610612764/primary/L/logo.svg",
+    "Denver Nuggets":
+      "https://cdn.nba.com/logos/nba/1610612743/primary/L/logo.svg",
+    "Minnesota Timberwolves":
+      "https://cdn.nba.com/logos/nba/1610612750/primary/L/logo.svg",
+    "Oklahoma City Thunder":
+      "https://cdn.nba.com/logos/nba/1610612760/primary/L/logo.svg",
+    "Portland Trail Blazers":
+      "https://cdn.nba.com/logos/nba/1610612757/primary/L/logo.svg",
+    "Utah Jazz": "https://cdn.nba.com/logos/nba/1610612762/primary/L/logo.svg",
+    "Golden State Warriors":
+      "https://cdn.nba.com/logos/nba/1610612744/primary/L/logo.svg",
+    "Los Angeles Clippers":
+      "https://cdn.nba.com/logos/nba/1610612746/primary/L/logo.svg",
+    "Los Angeles Lakers":
+      "https://cdn.nba.com/logos/nba/1610612747/primary/L/logo.svg",
+    "Phoenix Suns":
+      "https://cdn.nba.com/logos/nba/1610612756/primary/L/logo.svg",
+    "Sacramento Kings":
+      "https://cdn.nba.com/logos/nba/1610612758/primary/L/logo.svg",
+    "Dallas Mavericks":
+      "https://cdn.nba.com/logos/nba/1610612742/primary/L/logo.svg",
+    "Houston Rockets":
+      "https://cdn.nba.com/logos/nba/1610612745/primary/L/logo.svg",
+    "Memphis Grizzlies":
+      "https://cdn.nba.com/logos/nba/1610612763/primary/L/logo.svg",
+    "New Orleans Pelicans":
+      "https://cdn.nba.com/logos/nba/1610612740/primary/L/logo.svg",
+    "San Antonio Spurs":
+      "https://cdn.nba.com/logos/nba/1610612759/primary/L/logo.svg",
+  };
+  let isMounted = false;
+  onMount(() => {
+    d3.csv("src/DSC106_NBA.csv").then((csvData) => {
+      data = csvData;
+      renderBarChart2(1953);
     });
+    isMounted = true;
+  });
 
-    function renderBarChart2(year) {
+  function renderBarChart2(year) {
     teams = data.filter((d) => d.Year == year);
     keys = Object.keys(teams[0]).filter((key) => key !== "Year");
     values = Object.entries(teams[0])
@@ -213,7 +211,10 @@
 
     x = d3.scaleBand().domain(keys).range([0, width]).padding(0.1);
 
-    y = d3.scaleLinear().domain([minVal - minVal, maxVal - minVal]).range([height, 0]);
+    y = d3
+      .scaleLinear()
+      .domain([minVal - minVal, maxVal - minVal])
+      .range([height, 0]);
 
     svg1
       .append("g")
@@ -425,75 +426,75 @@
       .style("font-size", "14px");
   }
   function updateTooltipPosition(event, d, svg) {
-        tooltip = svg.select(".tooltip");
-        const tooltipWidth = 100;
-        const tooltipHeight = 40;
-        // const mouseX = event.pageX;
-        // const mouseY = event.pageY;
+    tooltip = svg.select(".tooltip");
+    const tooltipWidth = 100;
+    const tooltipHeight = 40;
+    // const mouseX = event.pageX;
+    // const mouseY = event.pageY;
 
-        // tooltip.attr(
-        //   "transform",
-        //   `translate(${mouseX - 280}, ${mouseY - tooltipHeight - 170})`,
-        // );
-        // tooltip.attr(
-        //   "transform",
-        //   `translate(${0.5 * mouseX}, ${0.5 * mouseY})`,
-        // );
-        // console.log(event.toElement);
-        let [mouseX, mouseY] = d3.pointer(event);
-        // console.log(mouseX, mouseY);
-        tooltip.attr(
-            "transform",
-            `translate(${mouseX + 10}, ${mouseY - tooltipHeight + 5})`,
-        );
-        // tooltip.select('.text').text(`${event.srcElement.__data__.team}: ${event.srcElement.__data__.score} dsfjhsdk`);
-        // console.log(tooltip.select('.text'))
-        // console.log(event.srcElement.__data__);
-        // console.log(tooltip.selectAll('text'));
-        // const first = tooltip.select('text')
-        // tooltip.select('text').text(`${d.team}: ${d.score}`);
-        tooltip
-            .select("text:nth-child(3)")
-            .text(`PPG Diff: ${Math.round(d.score * 100) / 100}`);
-        // tooltip.select("text:nth-child(3)").text(`PPG: ${d.score}`);
-        // tooltip.selectAll('text').text(`${d.team}: ${d.score}`);
-    }
-
+    // tooltip.attr(
+    //   "transform",
+    //   `translate(${mouseX - 280}, ${mouseY - tooltipHeight - 170})`,
+    // );
+    // tooltip.attr(
+    //   "transform",
+    //   `translate(${0.5 * mouseX}, ${0.5 * mouseY})`,
+    // );
+    // console.log(event.toElement);
+    let [mouseX, mouseY] = d3.pointer(event);
+    // console.log(mouseX, mouseY);
+    tooltip.attr(
+      "transform",
+      `translate(${mouseX + 10}, ${mouseY - tooltipHeight + 5})`,
+    );
+    // tooltip.select('.text').text(`${event.srcElement.__data__.team}: ${event.srcElement.__data__.score} dsfjhsdk`);
+    // console.log(tooltip.select('.text'))
+    // console.log(event.srcElement.__data__);
+    // console.log(tooltip.selectAll('text'));
+    // const first = tooltip.select('text')
+    // tooltip.select('text').text(`${d.team}: ${d.score}`);
+    tooltip
+      .select("text:nth-child(3)")
+      .text(`PPG Diff: ${Math.round(d.score * 100) / 100}`);
+    // tooltip.select("text:nth-child(3)").text(`PPG: ${d.score}`);
+    // tooltip.selectAll('text').text(`${d.team}: ${d.score}`);
+  }
 </script>
+
 <main>
   <div id="title">
     <h1>
-        Is Defense Dying in the NBA?
-        <!-- <img
+      Is Defense Dying in the NBA?
+      <!-- <img
         src="https://images.ctfassets.net/h8q6lxmb5akt/5qXnOINbPrHKXWa42m6NOa/421ab176b501f5bdae71290a8002545c/nba-logo_2x.png"
         ,
         alt="NBA"
       /> -->
     </h1>
     <div id="hook">
-        <p>HOOK TEXT PLACEHOLDER</p>
-        <p>HOOK TEXT PLACEHOLDER</p>
-        <p>HOOK TEXT PLACEHOLDER</p>
-        <p>HOOK TEXT PLACEHOLDER</p>
-        <p>HOOK TEXT PLACEHOLDER</p>
+      <p>HOOK TEXT PLACEHOLDER</p>
+      <p>HOOK TEXT PLACEHOLDER</p>
+      <p>HOOK TEXT PLACEHOLDER</p>
+      <p>HOOK TEXT PLACEHOLDER</p>
+      <p>HOOK TEXT PLACEHOLDER</p>
     </div>
-</div>
-    <div id="chart2" class="chart_class">
-        <h2 style="text-align: left;">
-          NBA Teams Difference in Average Points per Game in 1953 From All Time
-          Lowest Average
-        </h2>
-      </div>
-      <div class="paragraph_annotation">
-        <p>PARAGRAPH ANNOTATION PLACEHOLDER</p>
-      </div>
+  </div>
+  <div id="chart2" class="chart_class">
+    <h2 style="text-align: left;">
+      NBA Teams Difference in Average Points per Game in 1953 From All Time
+      Lowest Average
+    </h2>
+  </div>
+  <div class="paragraph_annotation">
+    <p>PARAGRAPH ANNOTATION PLACEHOLDER</p>
+  </div>
 </main>
-<style>
 
+<style>
   #overlay {
     font-size: 0.9em;
     /* position: absolute; */
-    margin-left: auto; 
+    margin-left: auto;
     margin-right: 0;
     min-width: 250px;
     width: 15%;
@@ -517,7 +518,8 @@
     font-weight: bold;
   }
 
-  .chart_class, #title {
+  .chart_class,
+  #title {
     background-color: antiquewhite;
     margin: auto;
     display: flex;
@@ -546,7 +548,8 @@
     height: 20%;
   }
 
-  #text, .paragraph_annotation {
+  #text,
+  .paragraph_annotation {
     font-size: 18px;
     margin-left: 40px;
     margin-right: 40px;
@@ -554,4 +557,3 @@
     font-family: Arial, Helvetica, sans-serif;
   }
 </style>
-
